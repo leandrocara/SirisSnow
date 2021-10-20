@@ -1,0 +1,17 @@
+archivo,directorio
+finic.txt,./.finic.txt
+ffin.txt,./.ffin.txt
+dirR,./
+dir.mod,/home/lean/ProyectoSiris/modis/mod/
+dir.mod.c,/home/lean/ProyectoSiris/modis/c_mod/
+dir.mbase,/home/lean/ProyectoSiris/modis/mod10base/
+dir.myd,/home/lean/ProyectoSiris/modis/myd/
+dir.myd.c,/home/lean/ProyectoSiris/modis/c_myd/
+dir.mybase,/home/lean/ProyectoSiris/modis/myd10base/
+fun.dir,/home/lean/ProyectoSiris/Dropbox/repos/tesis/Daemons/servermod/f_apoyo/
+dir.mod.tap,/home/lean/ProyectoSiris/modis/mod_tap/
+dir.mod.myd,/home/lean/ProyectoSiris/modis/mod_myd/
+dir.otros,/home/lean/ProyectoSiris/modis/apoyo/
+dir.mod.myd.c.max,/home/lean/ProyectoSiris/modis/c_mod_myd_max/
+dir.mod.myd.c.min,/home/lean/ProyectoSiris/modis/c_mod_myd_min/
+dir.log,./log
