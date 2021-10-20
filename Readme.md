@@ -4,6 +4,9 @@
  
  The selected area correspond to a 75 km buffer of the principal glaciers sensed by the World Glacier Monitoring Sistem. 
  
-  
-My first commit
+structure of runner
+necestio generar un archivo que se llame: 
+.usr, dde tenga esta estructura 
+usuario
+contraseña
 
