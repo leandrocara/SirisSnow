@@ -48,7 +48,7 @@ earthdata_usr -y -s
 
 echo "";echo "Obteniendo el token para la descarga del web-server de la nasa";echo ""
 
-earthdata_token $usr $pass  > /dev/null
+	earthdata_token $usr $pass  > /dev/null
 
 
 # j="2020-02-25"
