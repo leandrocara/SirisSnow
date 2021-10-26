@@ -1,4 +1,4 @@
-archivo,directorio
+	archivo,directorio
 finic.txt,./.finic.txt
 ffin.txt,./.ffin.txt
 dirR,./
@@ -15,3 +15,6 @@ dir.otros,./apoyo/
 dir.mod.myd.c.max,./modis/c_mod_myd_max/
 dir.mod.myd.c.min,./modis/c_mod_myd_min/
 dir.log,./log/
+grilla_modis,./apoyo/grilla_modis_sudam.shp
+tabla_tiles,./apoyo/corners_sudam.csv
+base_shp,./apoyo/AOI_wgs84_sur.shp		

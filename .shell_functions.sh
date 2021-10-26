@@ -11,35 +11,52 @@ base_builder()
 ### si no exixten:
 
 tabdir=`cat ./.dir.txt` # esta debe ser la única ruta importante!
-modtap=`echo "$tabdir" | sed '12q;d'`; modtap=${modtap#*,}; modbase=${modtap%,*}
+local modtap=`echo "$tabdir" | sed '12q;d'`; modtap=${modtap#*,}; modbase=${modtap%,*}
 
 #### si existe modtap
-if [ -d "$modtap" ]; then
+if [ -d "$modtap" ]
+ then
 ### chequeo que existan imágenes en el área de estudio!
 echo "Existen las carpetas de modis en la base de datos"
 else
  for i in $tabdir 
   do
-	 if [[  "$i" =~ 'modis' ]] 
+	 if [[ "$i" =~ 'modis/' ]] 
 	  then 
-		 i=${i#*,}; i=${i%,*}
+		 i=${i#*,}
 		 mkdir $i
-	   fi
+	   fi			
 	done
 fi 
 ### generé los directorios 
 
 ### chequeo existencia de imágenes!
-x=`ls $modtap*.tif | wc -l`
 
-if [ $x -gt 0 ]; then 
+x=$modtap*.tif
+if [ -f "$x" ]; then
+
  echo "Existe información dentro de las carpetas!"
  ### información previamente generada!
  ### salgo 
 else
 echo "GENERO LA BASE DE LAS IMÁGENES!"
+Rscript .tiles_builder.R
 
-Rscript tiles
+
+local fecha1=2002-04-19
+local fecha2=2002-04-20
+for i in `cat .tiles2.txt`
+do
+curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MOD10A1&version=6&format=GeoTIFF&time=$fecha1,$fecha2&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"		
+done
+	mv MOD10A1_* $modbase
+rm response-header.txt
+
+### acá armo todas las bases en función de esta imágen: 
+### le doy nomrbe a las imágenes con un archivo de apoyo
+
+Rscript .armador_bases_img.R
+
 fi
 
 }

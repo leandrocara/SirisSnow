@@ -1,0 +1,8 @@
+./modis/mod/,MOD10A1.A2000055_Snow_Cover_Area	
+./modis/c_mod/,MOD10A1_A2000055_Clouds_Cover_Area
+./modis/myd/,MYD10A1.A2000055_Snow_Cover_Area
+./modis/c_myd/,MYD10A1_A2000055_Clouds_Cover_Area
+./modis/mod_tap/,MOD_TAP.A2000055.snow
+./modis/mod_myd/,MOD.MYD.A2000055.snow.cover.area
+./modis/c_mod_myd_max/,MOD.MYD.A2000055.clouds.max
+./modis/c_mod_myd_min/,MOD.MYD.A2000055.clouds.min

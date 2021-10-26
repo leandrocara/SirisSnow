@@ -1,5 +1,5 @@
 #!/bin/bash
-### Snow Corver Area and Clouds Cover Area Builder/Updater MODIS Derived data base. 
+	### Snow Corver Area and Clouds Cover Area Builder/Updater MODIS Derived data base. 
 clear
 echo "//////////////////////////////////////////////////////////////////////////////////"
 echo "---------------------------------------------------------------------------------"
@@ -40,10 +40,10 @@ echo "Executing earthdata_usr"
 earthdata_usr -y -s
 
 echo "";echo "Obteniendo el token para la descarga del web-server de la nasa";echo ""
-earthdata_token $usr $pass  > /dev/null
+				earthdata_token $usr $pass  > /dev/null
 
 #### corro la función que arma la estructura
-base_builder() $token
+base_builder()
 
 
 echo "Ejecutando el script armador_fechas"; echo "" ; echo "" 
@@ -82,7 +82,7 @@ date +"%T"
 #h14v14#   -63,-56,-62,-55
 
 #i="h11v11;-73,-25,-72,-24"
-for i in `cat .tiles2.txt`
+for i in `cat .tiles.txt`
 # i=`cat .tiles2.txt | sed "1q;d"`
 do
 i=${i#*;}
@@ -130,17 +130,6 @@ fi
 
 rm response-header.txt
 
-#############################################
-
-##################################################################################################
-
-##################################################################################################
-					Hasta acá!!!!!
-##################################################################################################
-
-##################################################################################################
-
-##################################################################################################
 
 echo "" ;echo "Ejecutando el armador de información combinada para nieve y nubes"; echo "" 
 
