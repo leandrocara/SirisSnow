@@ -4,6 +4,60 @@
 #### leandrocara@hotmail.com	
 #### Ocutbre 2021
 
+
+base_builder()
+{
+### chequeo que existan los directorios de modis
+### si no exixten:
+
+tabdir=`cat ./.dir.txt` # esta debe ser la única ruta importante!
+modtap=`echo "$tabdir" | sed '12q;d'`; modtap=${modtap#*,}; modbase=${modtap%,*}
+
+#### si existe modtap
+if [ -d "$modtap" ]; then
+### chequeo que existan imágenes en el área de estudio!
+echo "Existen las carpetas de modis en la base de datos"
+else
+ for i in $tabdir 
+  do
+	 if [[  "$i" =~ 'modis' ]] 
+	  then 
+		 i=${i#*,}; i=${i%,*}
+		 mkdir $i
+	   fi
+	done
+fi 
+### generé los directorios 
+
+### chequeo existencia de imágenes!
+x=`ls $modtap*.tif | wc -l`
+
+if [ $x -gt 0 ]; then 
+ echo "Existe información dentro de las carpetas!"
+ ### información previamente generada!
+ ### salgo 
+else
+echo "GENERO LA BASE DE LAS IMÁGENES!"
+
+Rscript tiles
+fi
+
+}
+### no tengo info en los directorios! 
+# Tengo que levantar 
+
+ 
+ ### no existen los directorios! 
+ ## entonces los creo 
+ ### creo los directorios 
+ ### busco el shp de base
+ ### obtengo los tiles
+ ### descargo la serie de imágenes
+ ### corro el dummie
+ ### 
+ ### si no 
+
+
 dataset_build () {																																							# dataset_build
 ### $1 es la ruta de la lista de las subcarpetas para el data set! 
 
@@ -36,8 +90,8 @@ done
 earthdata_token () {
 ##################################### obtiene el token para la descarga
 curl -X POST --header	 "Content-Type: application/xml" -d "<token><username>$1</username><password>$2</password><client_id>zurdito</client_id><user_ip_address>192.168.0.1</user_ip_address></token>"  https://cmr.earthdata.nasa.gov/legacy-services/rest/tokens > token.xml
-d1=` cat token.xml | sed '3q;d'`
-d1=`echo ${d1#*<id>}`;d1=`echo ${d1%</id>*}`
+token=` cat token.xml | sed '3q;d'`
+token=`echo ${token#*<id>}`;token=`echo ${token%</id>*}`
 ###########################################
 
 }																																							

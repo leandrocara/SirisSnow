@@ -10,15 +10,13 @@ echo "--------------------------------------------------------------------------
 echo "/////////////////////////////////////////////////////////////////////////////////"
 echo ""
 echo ""
-
 ##################################################### levanto las rutas a partir de esta carpeta
 SCRIPT=`realpath $0`
 dirR=`dirname $SCRIPT`
 
 tabdir=`cat $dirR/.dir.txt` # esta debe ser la única ruta importante!
-	ini="./.finic.txt"
+ini="./.finic.txt"
 fin="./.ffin.txt"
-
 ################### dir mod base
 # 
 modbase=`echo "$tabdir" | sed '7q;d'`; modbase=${modbase#*,}; modbase=${modbase%,*}
@@ -36,20 +34,22 @@ cd $dirR
 ##########
 source ./.shell_functions.sh
 
-
-echo "Ejecutando el script armador_fechas"; echo "" ; echo "" 
-rm -f *.*
-Rscript ./.armador_fechas.R > /dev/null
-
 ####
-																																																	#(2) earthdata_usr
+#(2) earthdata_usr
 echo "Executing earthdata_usr"
 earthdata_usr -y -s
 
 echo "";echo "Obteniendo el token para la descarga del web-server de la nasa";echo ""
+earthdata_token $usr $pass  > /dev/null
 
-	earthdata_token $usr $pass  > /dev/null
+#### corro la función que arma la estructura
+base_builder() $token
 
+
+echo "Ejecutando el script armador_fechas"; echo "" ; echo "" 
+### ojo con esto, hay que cambiarlo para que no borre el README
+rm -f *.*
+Rscript ./.armador_fechas.R > /dev/null
 
 # j="2020-02-25"
 
@@ -87,9 +87,9 @@ for i in `cat .tiles2.txt`
 do
 i=${i#*;}
 
-curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MOD10A1&version=6&format=GeoTIFF&time=$fecha1,$fecha1&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$d1&email=name@domain.com"		
+curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MOD10A1&version=6&format=GeoTIFF&time=$fecha1,$fecha1&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"		
 
-curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MYD10A1&version=6&format=GeoTIFF&time=$fecha1,$fecha1&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$d1&email=name@domain.com"
+curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MYD10A1&version=6&format=GeoTIFF&time=$fecha1,$fecha1&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"
 
 done
 
@@ -114,8 +114,7 @@ fi
 
 ##### acá debería acomodarse el prblema! pero eso hay que analizarlo mejor!
 #debo sabér que fecha es la que estoy ejecutando para descargar
-
-##########################################
+#########################################
 
 echo "" ;echo "Imágenes descargadas para la fecha $fecha1" 	; echo ""  ; echo "#"  ; ls | grep '.tif'		; echo "#"  ; echo "" 
 
@@ -149,7 +148,7 @@ Rscript .mod_nieve_nubes.R $dirR
 
 
 ######################### van un par de func acá 
-img_checker wdimg.txt $fecha1 $d1 $modbase $mydbase $dirR	
+img_checker wdimg.txt $fecha1 $token $modbase $mydbase $dirR	
 
 ### habría que ver de redescargar la imágen que necesito y falló. Si falla de vuelta, se descarta del mosaico!
 
@@ -171,7 +170,7 @@ echo "#############################################################"
 
 done
 ################### elimina el token de descarga!
-curl -X DELETE --header "Content-Type: application/xml" https://cmr.earthdata.nasa.gov/legacy-services/rest/tokens/$d1
+curl -X DELETE --header "Content-Type: application/xml" https://cmr.earthdata.nasa.gov/legacy-services/rest/tokens/$token
 ################
 
 rm -f *.*
