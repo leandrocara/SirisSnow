@@ -4,14 +4,15 @@
 #### leandrocara@hotmail.com	
 #### Ocutbre 2021
 
-
 base_builder()
 {
+
 ### chequeo que existan los directorios de modis
 ### si no exixten:
 
 tabdir=`cat ./.dir.txt` # esta debe ser la única ruta importante!
-local modtap=`echo "$tabdir" | sed '12q;d'`; modtap=${modtap#*,}; modbase=${modtap%,*}
+local modtap=`echo "$tabdir" | sed '12q;d'`; modtap=${modtap#*,}; modtap=${modtap%,*}
+
 
 #### si existe modtap
 if [ -d "$modtap" ]
@@ -31,25 +32,26 @@ fi
 ### generé los directorios 
 
 ### chequeo existencia de imágenes!
-
-x=$modtap*.tif
-if [ -f "$x" ]; then
-
- echo "Existe información dentro de las carpetas!"
+local x=$modtap"MOD_TAP.A2000055.snow"
+echo "-----------" 
+if [[ -f "$x" ]]; then
+echo "Existe información dentro de las carpetas!"
  ### información previamente generada!
  ### salgo 
 else
 echo "GENERO LA BASE DE LAS IMÁGENES!"
 Rscript .tiles_builder.R
 
-
 local fecha1=2002-04-19
 local fecha2=2002-04-20
-for i in `cat .tiles2.txt`
-do
-curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MOD10A1&version=6&format=GeoTIFF&time=$fecha1,$fecha2&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"		
-done
-	mv MOD10A1_* $modbase
+
+# for i in `cat .tiles.txt`
+#do
+#curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MOD10A1&version=6&format=GeoTIFF&time=$fecha1,$fecha2&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"		
+#done
+
+
+mv MOD10A1_* $modbase
 rm response-header.txt
 
 ### acá armo todas las bases en función de esta imágen: 
@@ -75,7 +77,9 @@ fi
  ### si no 
 
 
-dataset_build () {																																							# dataset_build
+dataset_build () 
+{
+# dataset_build
 ### $1 es la ruta de la lista de las subcarpetas para el data set! 
 
 ## $2 es la dirección de donde tiene que buscar el dataset!
@@ -111,7 +115,7 @@ token=` cat token.xml | sed '3q;d'`
 token=`echo ${token#*<id>}`;token=`echo ${token%</id>*}`
 ###########################################
 
-}																																							
+}
 
 earthdata_usr () {																																							# earthdata_usr
 
@@ -212,7 +216,10 @@ fi
 }
 
 
-img_downloader () {																																																		# img_downloader
+img_downloader () 
+{
+
+# img_downloader
 check_connection $9
 if [ "$existence" -eq 1 ] 
 then 
@@ -223,7 +230,9 @@ rm $5
 fi
 }
 
-mosaicking_nd_resample () { 																																													# mosaicking_nd_resample
+mosaicking_nd_resample () 
+{
+# mosaicking_nd_resample
 if [ $4 -ne 0 ]
 then 
 img=`ls .././tmp | egrep  '*.tif' | head -1 | cut -c 1-16`
@@ -237,7 +246,8 @@ echo "No Images for $3 in this day"
 fi
 }  
  
-sca_cca_builder () {																																																	# sca_cca_builder
+sca_cca_builder () {	
+# sca_cca_builder
 if [ $4 -ne 0 ]
 then 
 Rscript .././functions/sca_nd_cca.R $1 $2 $3
@@ -246,7 +256,8 @@ echo ""; echo "Invalid $2 image for $3 date"; echo ""
 fi
 }
 
-mod_myd_builder () {																																																	# mod_myd_builder
+mod_myd_builder () {
+# mod_myd_builder
 if [ $2 -ne 0 ] ||  [ $3 -ne 0 ]
 then 
 Rscript .././functions/mod_myd_combination.R $1 $2 $3 $4
@@ -257,7 +268,9 @@ fi
 }
 
 
-mod_tap_builder () {																																																	# mod_tap_builder
+mod_tap_builder () 
+{
+	# mod_tap_builder
 ### este trabaja con una base:
 if [ ! -f .././support/modtap_base.tif ]
 then 
@@ -270,8 +283,8 @@ Rscript .././functions/mod_tap_builder.R $1 $2
 }
 
 ######
+check_connection () 
 
-check_connection ()																																																	# check_connection
 {
 local prueba=0
 local cond="--stand-alone"

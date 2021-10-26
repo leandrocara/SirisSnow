@@ -40,18 +40,22 @@ echo "Executing earthdata_usr"
 earthdata_usr -y -s
 
 echo "";echo "Obteniendo el token para la descarga del web-server de la nasa";echo ""
-				earthdata_token $usr $pass  > /dev/null
+
+#earthdata_token $usr $pass  > /dev/null
 
 #### corro la función que arma la estructura
-base_builder()
-
+base_builder 
 
 echo "Ejecutando el script armador_fechas"; echo "" ; echo "" 
 ### ojo con esto, hay que cambiarlo para que no borre el README
+
+
 rm -f *.*
 Rscript ./.armador_fechas.R > /dev/null
 
 # j="2020-02-25"
+
+#### 
 
 for j in `cat $ini`
 	do
@@ -85,7 +89,7 @@ date +"%T"
 for i in `cat .tiles.txt`
 # i=`cat .tiles2.txt | sed "1q;d"`
 do
-i=${i#*;}
+#i=${i#*;}
 
 curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MOD10A1&version=6&format=GeoTIFF&time=$fecha1,$fecha1&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"		
 
