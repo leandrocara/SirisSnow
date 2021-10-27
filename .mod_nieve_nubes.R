@@ -2,7 +2,7 @@ rm(list = ls())
 suppressMessages(library("raster"))
 ### de acá debería salir la mod y la c.mod nada más!
 rutas <- read.table("./.dir.txt",sep = ",",stringsAsFactors = F)
-args = commandArgs(trailingOnly=TRUE)
+
 
 rcl <- function(x,y){reclassify(x, y, include.lowest=FALSE, right=NA)}
 apoyo <- rutas[14,2]#"/home/lean/Dropbox/tesis/servermod/modis/apoyo/mascara_comp.tif"
@@ -69,14 +69,14 @@ dir<- c(dir.mod,dir.myd)
 mcd <- list()
 mcdtipo <- c("MOD10A1","MYD10A1")
 cat("Ingresando al procesamiento \n")
-m <- 1
+m <- 2
  for(m in 1:2){# m= mod y myd
 cat(paste0("Comenzando a procesar ",mcdtipo[m],"\n"))
-  modfsc <- bse
   lmod <- list.files(path = dir1[m],pattern = "*.tif$",full.names = T)
 cat(paste0("Número de imágenes ",mcdtipo[m], ": ",length(lmod),"\n"))
 
   if(length(lmod)>=1){
+  modfsc <- bse
 
   for(i in 1:length(lmod)){
     # write.table(x = paste(mcdtipo[m],(i),sep=";"),file = paste0(args[1],"/wdimg.txt"),row.names = F,col.names = F,quote = F)
@@ -84,7 +84,7 @@ cat(paste0("Número de imágenes ",mcdtipo[m], ": ",length(lmod),"\n"))
     mod <- raster(lmod[i])
     xmod <- rcl(mod,fsc.mosaic)
     modfsc <- mosaic(resample(xmod,bse,method="ngb"),modfsc,fun=max)
-    cat(paste0("paso ",i," completo\n"))}
+    cat(paste0("paso ",i," completo\n"))
         }
    
 ### CCA
@@ -98,14 +98,14 @@ writeRaster(rcl(modfsc,SCA),paste0(dir3[m],"/",mcdtipo[m],".",p1,"_Snow_Cover_Ar
 writeRaster(rcl(modfsc,FSC),paste0(dir4[m],"/",mcdtipo[m],".",p1,"_Fractional_Snow_Cover_.tif"),
             format="GTiff", overwrite=T,datatype="INT1U")
 
-
 # elimino los originales por ahora!!!
 file.remove(lmod) 
+}
   }
 
 cat("\n")
 # cat(paste0("Imagen ",p1," guardada para nieve y nubes\n"))}
 cat("script mod_nieve_nubes.R terminado\n")
 cat("######################\n")
-suppressMessages(file.remove(paste0(args[1],"/wdimg.txt")))
+
 

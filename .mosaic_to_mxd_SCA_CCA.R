@@ -6,29 +6,25 @@ suppressMessages(library(sp))
 
 rutas <- read.table("./.dir.txt",sep = ",",stringsAsFactors = F)
 # rutas <- read.table("/home/leandro/server/servermod/dir.txt",sep = ",",stringsAsFactors = F)
-apoyo <- rutas[14,2]#"/home/lean/Dropbox/tesis/servermod/modis/apoyo/mascara_comp.tif"
-apoyo <- paste0(apoyo,"mascara_comp.tif")
+(apoyo <- paste0(rutas[14,2],"mascara_comp.tif"))
 #mod   ##############################################################
-dir.mbase <- rutas[7,2]#"/home/lean/Dropbox/tesis/servermod/modis/mod10base"
-dir.mod <- rutas[5,2]#"/home/lean/Dropbox/tesis/servermod/modis/mod/"
-dir.mod.c <- rutas[6,2]#"/home/lean/Dropbox/tesis/servermod/modis/c_mod/"
+(dir.mbase <- rutas[7,2])#"/home/lean/Dropbox/tesis/servermod/modis/mod10base"
+(dir.mod <- rutas[5,2])#"/home/lean/Dropbox/tesis/servermod/modis/mod/"
+(dir.mod.c <- rutas[6,2])#"/home/lean/Dropbox/tesis/servermod/modis/c_mod/"
 #myd   ##############################################################
-dir.mybase <- rutas[10,2]#"/home/lean/Dropbox/tesis/servermod/modis/myd10base"
-dir.myd <- rutas[8,2]#"/home/lean/Dropbox/tesis/servermod/modis/myd/"
-dir.myd.c <- rutas[9,2]#"/home/lean/Dropbox/tesis/servermod/modis/c_myd/"
+(dir.mybase <- rutas[10,2])#"/home/lean/Dropbox/tesis/servermod/modis/myd10base"
+(dir.myd <- rutas[8,2])#"/home/lean/Dropbox/tesis/servermod/modis/myd/"
+(dir.myd.c <- rutas[9,2])#"/home/lean/Dropbox/tesis/servermod/modis/c_myd/"
 #   ##############################################################
 
 # rasterOptions(tmpdir = "/home/lean/RT")
-fun.dir <- rutas[11,2]#"/home/lean/Dropbox/tesis/servermod/f_apoyo/"# ???
-dir.mod.tap  <- rutas[12,2]#"/home/lean/Dropbox/tesis/servermod/modis/mod_tap/"
-dir.mod  <- rutas[5,2]#"/home/lean/Dropbox/tesis/servermod/modis/mod/"
-dir.myd  <- rutas[8,2]#"/home/lean/Dropbox/tesis/servermod/modis/myd/"
-dir.mod.myd <- rutas[13,2]#"/home/lean/Dropbox/tesis/servermod/modis/mod_myd/"
-dir.otros <- rutas[11,2]#"/home/lean/Dropbox/tesis/servermod/modis/apoyo/"
-dir.mod.c <- rutas[6,2]#"/home/lean/Dropbox/tesis/servermod/modis/c_mod/"
-dir.myd.c <- rutas[9,2]#"/home/lean/Dropbox/tesis/servermod/modis/c_myd/"
-dir.mod.myd.c.max <-  rutas[17,2]#"/home/lean/Dropbox/tesis/servermod/modis/c_mod_myd_max/"
-dir.mod.myd.c.min <-  rutas[18,2]#"/home/lean/Dropbox/tesis/servermod/modis/c_mod_myd_min/"
+(fun.dir <- rutas[11,2])#"/home/lean/Dropbox/tesis/servermod/f_apoyo/"# ???
+(dir.mod.tap  <- rutas[12,2])#"/home/lean/Dropbox/tesis/servermod/modis/mod_tap/"
+(dir.mod.myd <- rutas[13,2])#"/home/lean/Dropbox/tesis/servermod/modis/mod_myd/"
+(dir.otros <- rutas[11,2])#"/home/lean/Dropbox/tesis/servermod/modis/apoyo/"
+
+(dir.mod.myd.c.max <-  rutas[15,2])#"/home/lean/Dropbox/tesis/servermod/modis/c_mod_myd_max/"
+(dir.mod.myd.c.min <-  rutas[16,2])#"/home/lean/Dropbox/tesis/servermod/modis/c_mod_myd_min/"
 pos <- 10
 
 #######################################################################
@@ -37,16 +33,9 @@ for (i in 1:length(funciones)) source (chdir =T ,file = funciones[i])
 #######################################################################
 cat("\n Comenzando el prrocesamiento de los mosaicos TIF\n")
 
-### este depende de tres funciones = [dataFill,faltantes,jday2date]
-# #############
-# levanto la lista de imágenes que descargó mi demonio y guardo la primera de ellas
-cat("Chequeando si existen imágenes faltantes!\n")
-cat("esto no va maaaas!!!")
-# mod<- dataFill(x =dir.mod,verbose = T,lab = "missing.tif",relleno=NA,max.data=NULL)
 cat("\n")
 cat("#########\n")
 cat("\n")
-# myd<- dataFill(x =dir.myd,verbose = T,lab = "missing.tif",relleno=NA,max.data=NULL)
 
 #################################################### 
 cat("\nProcesamiento de SCA y CCA Para MOD10A1 y MYD10A1:\n")

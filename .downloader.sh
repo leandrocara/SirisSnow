@@ -110,29 +110,13 @@ else
 fi
 
 rm response-header.txt
-
+rm *.com
 echo "" ;echo "Ejecutando el armador de información combinada para nieve y nubes"; echo "" 
+exit
+Rscript .mod_nieve_nubes.R
 
-
-Rscript .mod_nieve_nubes.R $dirR
-
-
-######################### van un par de func acá 
-img_checker wdimg.txt $fecha1 $token $modbase $mydbase $dirR	
-
-### habría que ver de redescargar la imágen que necesito y falló. Si falla de vuelta, se descarta del mosaico!
-
-
-	
 ########################################################################################################################################
-#break
-########################################################################################################################################
-	########################################################################################################################################
-########################################################################################################################################
-########################################################################################################################################
-
-Rscript $dirR/.mosaic_to_mxd_SCA_CCA.R 
-
+Rscript .mosaic_to_mxd_SCA_CCA.R 
 
 echo "FIN procesamiento día: $fecha1" 
 date +"%T"

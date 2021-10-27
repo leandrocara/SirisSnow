@@ -119,20 +119,7 @@ fi
 
 }
 
-### no tengo info en los directorios! 
-# Tengo que levantar 
-
- 
- ### no existen los directorios! 
- ## entonces los creo 
- ### creo los directorios 
- ### busco el shp de base
- ### obtengo los tiles
- ### descargo la serie de imágenes
- ### corro el dummie
- ### 
- ### si no 
-
+####3
 
 dataset_build () 
 {
@@ -205,7 +192,7 @@ then
 		esac 
 	esac
 else
-	echo "NO se ha encontrado un usuario de Earthdata la generación/actualización de esta base de
+echo "NO se ha encontrado un usuario de Earthdata la generación/actualización de esta base de
 datos"
 echo "Por favor ingrese un  usuario autorizado por Earthdata. 
 (si desea generar un nuevo usuario, diríjase a  www.earthdata.com)" 
@@ -228,24 +215,6 @@ esac
 usr=$usuario
 pass=$contra
 }
-
-#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-#dates_downloader () # deprecado por ahora!
-#{
-## descargo la lista de fechas para mis imágenes 
-### MOD10A1
-#wget --no-check-certificate --user=$1
-# --password=$2 https://n5eil01u.ecs.nsidc.org/MOST/MOD10A1.006/ -O `echo $3` -o > /dev/null
-#Rscript .././functions/dates_directions.R `echo $3`  > /dev/null
-#}
-#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-### corro el script que me busca cual fue la última imágen procesada de mod-myd,
-###  (si la última es solo mod o solo myd va a un día anterior a 
-# menos que las imágenes sean anteriores a l 2002.07.04)
-###
-
-#### ahora lo que habría que hacer es empezar, día por día a ver las imágenes de dentro!
 
 
 index_per_date () {																																																			# index_per_date
@@ -273,7 +242,7 @@ fi
 }
 
 
-img_downloader () 
+img_downloader() 
 {
 
 # img_downloader
@@ -303,7 +272,7 @@ echo "No Images for $3 in this day"
 fi
 }  
  
-sca_cca_builder () {	
+sca_cca_builder() {	
 # sca_cca_builder
 if [ $4 -ne 0 ]
 then 
@@ -325,7 +294,7 @@ fi
 }
 
 
-mod_tap_builder () 
+mod_tap_builder() 
 {
 	# mod_tap_builder
 ### este trabaja con una base:
@@ -372,7 +341,7 @@ fileSize() {
 }
 
 
-img_checker () {
+img_checker() {
 wdimg=$6/$1
 while test -f "$wdimg"; do
 echo "Se detectaron errores en una imagen, chequeando.."
@@ -381,7 +350,7 @@ local x=`cat $wdimg`
 local y=${x%;*}
 local z=${x#*;}
 #### tengo que enconrtar el boundingbox 
-local z=`cat .tiles2.txt | sed "$z q;d"`
+local z=`cat .tiles.txt | sed "$z q;d"`
 local x=${z#*;}
 local z=${z%;*}
 
