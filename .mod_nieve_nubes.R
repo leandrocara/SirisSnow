@@ -11,12 +11,12 @@ apoyo <- paste0(apoyo,"mascara_comp.tif")
 dir.mbase <- rutas[7,2]#"/home/lean/Dropbox/tesis/servermod/modis/mod10base"
 dir.mod <- rutas[5,2]#"/home/lean/Dropbox/tesis/servermod/modis/mod/"
 dir.mod.c <- rutas[6,2]#"/home/lean/Dropbox/tesis/servermod/modis/c_mod/"
-dir.mod.fsc <- rutas[20,2]#"/home/lean/Dropbox/tesis/servermod/modis/mod_fsc/"
+dir.mod.fsc <- rutas[21,2]#"/home/lean/Dropbox/tesis/servermod/modis/mod_fsc/"
 #myd   ##############################################################
 dir.mybase <- rutas[10,2]#"/home/lean/Dropbox/tesis/servermod/modis/myd10base"
 dir.myd <- rutas[8,2]#"/home/lean/Dropbox/tesis/servermod/modis/myd/"
 dir.myd.c <- rutas[9,2]#"/home/lean/Dropbox/tesis/servermod/modis/c_myd/"
-dir.myd.fsc <- rutas[21,2]#"/home/lean/Dropbox/tesis/servermod/modis/myd_fsc/"
+dir.myd.fsc <- rutas[22,2]#"/home/lean/Dropbox/tesis/servermod/modis/myd_fsc/"
 #   ##############################################################
 ### chequeo la info que se encuentra en mbase
 if(length(list.files(dir.mbase))>=1){ 
@@ -69,6 +69,7 @@ dir<- c(dir.mod,dir.myd)
 mcd <- list()
 mcdtipo <- c("MOD10A1","MYD10A1")
 cat("Ingresando al procesamiento \n")
+m <- 1
  for(m in 1:2){# m= mod y myd
 cat(paste0("Comenzando a procesar ",mcdtipo[m],"\n"))
   modfsc <- bse
@@ -78,13 +79,13 @@ cat(paste0("Número de imágenes ",mcdtipo[m], ": ",length(lmod),"\n"))
   if(length(lmod)>=1){
 
   for(i in 1:length(lmod)){
-    write.table(x = paste(mcdtipo[m],(i),sep=";"),file = paste0(args[1],"/wdimg.txt"),row.names = F,col.names = F,quote = F)
+    # write.table(x = paste(mcdtipo[m],(i),sep=";"),file = paste0(args[1],"/wdimg.txt"),row.names = F,col.names = F,quote = F)
     ## llamo al raster
     mod <- raster(lmod[i])
     xmod <- rcl(mod,fsc.mosaic)
     modfsc <- mosaic(resample(xmod,bse,method="ngb"),modfsc,fun=max)
     cat(paste0("paso ",i," completo\n"))}
-  }
+        }
    
 ### CCA
    writeRaster(rcl(modfsc,CCA),paste0(dir2[m],"/",mcdtipo[m],"_",p1,"_Clouds_Cover_Area.tif"),
@@ -93,12 +94,13 @@ cat(paste0("Número de imágenes ",mcdtipo[m], ": ",length(lmod),"\n"))
 writeRaster(rcl(modfsc,SCA),paste0(dir3[m],"/",mcdtipo[m],".",p1,"_Snow_Cover_Area.tif"),
             format="GTiff", overwrite=T,datatype="INT1U")
 ### FSC
+
 writeRaster(rcl(modfsc,FSC),paste0(dir4[m],"/",mcdtipo[m],".",p1,"_Fractional_Snow_Cover_.tif"),
             format="GTiff", overwrite=T,datatype="INT1U")
 
 
 # elimino los originales por ahora!!!
-file.remove(lmod)
+file.remove(lmod) 
   }
 
 cat("\n")

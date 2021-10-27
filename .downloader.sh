@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash	
 	### Snow Corver Area and Clouds Cover Area Builder/Updater MODIS Derived data base. 
 clear
 echo "//////////////////////////////////////////////////////////////////////////////////"
@@ -31,6 +31,7 @@ log=`echo "$tabdir" | sed '17q;d'` ; log=${log#*,}; log=${log%,*}
 #####################
 lf=`date -I` 
 cd $dirR
+rm *.*
 ##########
 source ./.shell_functions.sh
 
@@ -41,7 +42,7 @@ earthdata_usr -y -s
 
 echo "";echo "Obteniendo el token para la descarga del web-server de la nasa";echo ""
 
-#earthdata_token $usr $pass  > /dev/null
+earthdata_token $usr $pass  > /dev/null
 
 #### corro la función que arma la estructura
 base_builder 
@@ -53,72 +54,48 @@ echo "Ejecutando el script armador_fechas"; echo "" ; echo ""
 rm -f *.*
 Rscript ./.armador_fechas.R > /dev/null
 
-# j="2020-02-25"
 
-#### 
+########################################################################################## 
+########################################################################################## 
+#### empiezo el ciclo iterativo
+########################################################################################## 
 
-for j in `cat $ini`
-	do
+echo "Iniciando con la descarga de imágenes"
 
-fecha1=`echo $j` ## esta es la fecha del día que voy a descargar
-echo "Fecha de inicio"
-echo $fecha1
-# fecha1=`cat $ini | sed "1q;d"`
-# fecha2=`cat $fin | sed "1q;d"`
 
-### borra la línea que ya utilizó del registro de $fin
-# sed -i '1d' $fin
+var=1
+m=`cat .ffin.txt | wc -l`	
 
-#echo "Fecha de fin"
-#echo $fecha2
+
+###
+while [  $m -gt 1 ]; do
+
+m=`cat .ffin.txt | wc -l`
+
+#fecha1=`echo $j` ## esta es la fecha del día que voy a descargar
+echo "############################################################"
+fecha1=`cat $ini | sed "$1q;d"`
+fecha2=`cat $fin | sed "$1q;d"`
+
+sed -i '1d' $fin
+sed -i '1d' $ini
+
+
 echo "#############################################################"
-echo "INICIO procesamiento día: $fecha1 "
+echo "INICIO procesamiento para el día: $fecha1 "
 date +"%T"
+####
 
-# esto debo revisarlo para agregar las nuevas áreas
-#h11v11#   -73,-25,-72,-24
-#h12v11#   -62,-26,-61,-25
-#h11v12#   -79,-36,-78,-35 	  
-#h12v12#   -68,-35,-67,-34
-#h12v13#   -79,-45,-78,-44
-#h13v13#   -63,-45,-62,-44 
-#h13v14#   -80,-56,-79,-55 
-#h14v14#   -63,-56,-62,-55
+nsidc_downloader $fecha1 $fecha2 $var; vv="$(nsidc_checker)"
+var=$?
 
-#i="h11v11;-73,-25,-72,-24"
-for i in `cat .tiles.txt`
-# i=`cat .tiles2.txt | sed "1q;d"`
-do
-#i=${i#*;}
+echo "################"
 
-curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MOD10A1&version=6&format=GeoTIFF&time=$fecha1,$fecha1&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"		
 
-curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MYD10A1&version=6&format=GeoTIFF&time=$fecha1,$fecha1&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"
-
-done
-
-##### acá ha surgido un problema que hay que resolver
-if [ -e "*.zip" ]   
-then 
- echo "Houston tenemos un problema!!"
- echo $fecha1 > .x.txt
- Rscript ./.apoyo.R 
- mkdir temporal
- mv *.zip ./temporal
- find . -name "*.zip" | while read filename
-                         do unzip -o -d "`dirname "$filename"`" "$filename"
-                        done 
- find . -print | grep -i `cat .x.txt` |  while read filename
-                                          do cp -a "$filename" . 
-                                         done 
- rm -R ./temporal
-else 
- echo "Todo normal después de descargar las imágenes"
-fi 
-
-##### acá debería acomodarse el prblema! pero eso hay que analizarlo mejor!
+# acá debería acomodarse el prblema! pero eso hay que analizarlo mejor!
 #debo sabér que fecha es la que estoy ejecutando para descargar
 #########################################
+
 
 echo "" ;echo "Imágenes descargadas para la fecha $fecha1" 	; echo ""  ; echo "#"  ; ls | grep '.tif'		; echo "#"  ; echo "" 
 
@@ -134,8 +111,8 @@ fi
 
 rm response-header.txt
 
-
 echo "" ;echo "Ejecutando el armador de información combinada para nieve y nubes"; echo "" 
+
 
 Rscript .mod_nieve_nubes.R $dirR
 

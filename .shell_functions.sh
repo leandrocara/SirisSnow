@@ -4,6 +4,59 @@
 #### leandrocara@hotmail.com	
 #### Ocutbre 2021
 
+nsidc_downloader()
+{
+### lo primero que tengo que hacer es tirar una búsqueda para ver cuantas imágenes tengo para descargar
+
+#local x=`cat .tiles.txt | sed "$1q;d"`
+
+
+for i in `cat .tiles.txt`
+do
+#i=${i#*;}
+echo $3
+if [ $3 -gt 0 ]
+
+then
+curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MOD10A1&version=6&format=GeoTIFF&time=$1,$2&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"		
+##
+curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MYD10A1&version=6&format=GeoTIFF&time=$1,$2&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"
+else
+curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MOD10A1&version=6&format=GeoTIFF&time=$1,$1&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"		
+##
+curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MYD10A1&version=6&format=GeoTIFF&time=$1,$1&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"
+fi
+done
+
+}
+
+#####
+nsidc_checker()
+{
+##### acá ha surgido un problema que hay que resolver
+if [ -e "*.zip" ]   		
+then 
+ echo "Houston tenemos un problema!!"
+ echo $fecha1 > .x.txt
+ Rscript ./.apoyo.R 
+ mkdir temporal
+ mv *.zip ./temporal
+ find . -name "*.zip" | while read filename
+                         do unzip -o -d "`dirname "$filename"`" "$filename"
+                        done 
+ find . -print | grep -i `cat .x.txt` |  while read filename
+                                          do cp -a "$filename" . 
+                                         done 
+ rm -R ./temporal
+
+return 0
+else 
+ echo "Todo normal después de descargar las imágenes"
+return 1
+	fi 
+}
+
+#############
 base_builder()
 {
 
@@ -32,24 +85,27 @@ fi
 ### generé los directorios 
 
 ### chequeo existencia de imágenes!
-local x=$modtap"MOD_TAP.A2000055.snow"
-echo "-----------" 
+local x=$modtap"MOD_TAP.A2000055.snow.tif"
+echo $x
+
 if [[ -f "$x" ]]; then
 echo "Existe información dentro de las carpetas!"
  ### información previamente generada!
  ### salgo 
 else
+echo "########################################"
+echo "NO se encuentra información previa en el sistema"
 echo "GENERO LA BASE DE LAS IMÁGENES!"
+
 Rscript .tiles_builder.R
 
 local fecha1=2002-04-19
 local fecha2=2002-04-20
 
-# for i in `cat .tiles.txt`
-#do
-#curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MOD10A1&version=6&format=GeoTIFF&time=$fecha1,$fecha2&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"		
-#done
-
+for i in `cat .tiles.txt`
+do
+curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MOD10A1&version=6&format=GeoTIFF&time=$fecha1,$fecha2&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"		
+done
 
 mv MOD10A1_* $modbase
 rm response-header.txt
@@ -62,6 +118,7 @@ Rscript .armador_bases_img.R
 fi
 
 }
+
 ### no tengo info en los directorios! 
 # Tengo que levantar 
 
