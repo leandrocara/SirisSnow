@@ -49,7 +49,7 @@ base_builder
 
 echo "Ejecutando el script armador_fechas"; echo "" ; echo "" 
 ### ojo con esto, hay que cambiarlo para que no borre el README
-
+echo $token
 
 rm -f *.*
 Rscript ./.armador_fechas.R > /dev/null
@@ -98,6 +98,7 @@ echo "################"
 
 
 echo "" ;echo "Imágenes descargadas para la fecha $fecha1" 	; echo ""  ; echo "#"  ; ls | grep '.tif'		; echo "#"  ; echo "" 
+date +"%T"
 
 x=`ls *.tif | wc -l`
 
@@ -112,12 +113,16 @@ fi
 rm response-header.txt
 rm *.com
 echo "" ;echo "Ejecutando el armador de información combinada para nieve y nubes"; echo "" 
-exit
+
 Rscript .mod_nieve_nubes.R
-
+echo "Script 		mod_nieve_nubes.R finalizado"
+date +"%T"
 ########################################################################################################################################
-Rscript .mosaic_to_mxd_SCA_CCA.R 
 
+Rscript .mosaic_to_mxd_SCA_CCA.R 
+echo "Script  mosaic_to_mxd_SCA_CCA."
+date +"%T"
+date +"%T"
 echo "FIN procesamiento día: $fecha1" 
 date +"%T"
 echo "#############################################################"

@@ -20,3 +20,4 @@ tabla_tiles,./apoyo/corners_sudam.csv
 base_shp,./apoyo/AOI_wgs84_sur.shp
 dir.mod.fsc,./modis/mod_fsc/
 dir.myd.fsc,./modis/myd_fsc/
+modis_procesado,./modis/proc/

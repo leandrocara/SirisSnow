@@ -69,7 +69,7 @@ dir<- c(dir.mod,dir.myd)
 mcd <- list()
 mcdtipo <- c("MOD10A1","MYD10A1")
 cat("Ingresando al procesamiento \n")
-m <- 2
+
  for(m in 1:2){# m= mod y myd
 cat(paste0("Comenzando a procesar ",mcdtipo[m],"\n"))
   lmod <- list.files(path = dir1[m],pattern = "*.tif$",full.names = T)
