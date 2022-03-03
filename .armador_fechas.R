@@ -13,60 +13,55 @@ funciones<- list.files(path = "./f_apoyo/",pattern = ".R$",full.names = T)
 for (i in 1:length(funciones)) 
   source (chdir =T ,file = funciones[i])
 
+
 #mod   ##############################################################
-dir.mod <- d1[5,2]#"/home/servermod/modis/mod/"
-dir.mod.c <- d1[6,2]#"/home/servermod/modis/c_mod/"
-dir.mbase <- d1[7,2]#"/home/servermod/modis/mod10base"
+dir.mod.tap  <-   paste0(d1[5,2],"/mod_tap/")
+dir.mod  <-   paste0(d1[5,2],"/mod/")
+dir.mod.c  <- paste0(d1[5,2],"/c_mod/")
+dir.mbase <-  paste0(d1[5,2],"/mod10base/")
+
 #myd   ##############################################################
-dir.myd <- d1[8,2]#"/home/servermod/modis/myd/"
-dir.myd.c <- d1[9,2]#"/home/Dropbox/tesis/servermod/modis/c_myd/"
-dir.mybase <- d1[10,2]#"/home/Dropbox/tesis/servermod/modis/myd10base"
-#   ##############################################################
-dir.mod.myd.max  <- d1[15,2]#"/home/lean/Dropbox/tesis/servermod/modis/mod10base"
-dir.mod.myd.min  <- d1[16,2]#"/home/lean/Dropbox/tesis/servermod/modis/mod10base"
-dir.mod.myd  <- d1[13,2]#"/home/lean/Dropbox/tesis/servermod/modis/mod10base"
+dir.myd  <- paste0(d1[5,2],"/myd/")
+dir.myd.c  <- paste0(d1[5,2],"/c_myd/")
+dir.mybase<- paste0(d1[5,2],"/myd10base/")
+
+#mod myd combinados ##############################################################
+dir.mod.myd.max <- paste0(d1[5,2],"/c_mod_myd_max/")  
+dir.mod.myd.min <- paste0(d1[5,2],"/c_mod_myd_min/")
+dir.mod.myd  <- paste0(d1[5,2],"/mod_myd/")
 #   ##############################################################
 ficheros <- c(dir.mod,dir.mod.c,dir.myd,dir.myd.c,dir.mod.myd.max,dir.mod.myd.min,dir.mod.myd)
-fecha1<- d1[12,2] # sale de mod-tap
+dir.mod.tap
 
-e1<- tail(corte.x(list.files(fecha1)),n=1)
+fecha_modtap_last<- tail(corte.x(list.files(dir.mod.tap)),n=1)
 
 #### borra toda la información de modis previamente descargada y no procesada!
-
 for( i in c(dir.mbase,dir.mybase)){
   if(length(list.files(i))>0){
     unlink(paste0(i,"*.*"))
   }
 }
 
-# i <- dir.mod.c
+
 for( i in ficheros){
   x <- list.files(pattern = ".tif$",i)
-  cat(paste0("Imágenes leídas para ", i, ":\n"))
-  print(length(x))
-  ### deja la última imagen!
-  x<- x[c((length(x)-1):length(x))]
-  
-  ### acá habría que corregir para que no haga esto por mas de un mes!
-  ### busca en cada fichero que exista información más nueva que la 
-  ### que tiene mod_tap
-  
-  if(length(x[which(corte.x(x)>e1)])>=1){
-  cat("\n")
-  cat(paste("archivos procesados con error previamente para",i," \n"))
-  cat(x[which(corte.x(x)>e1)])
-  unlink(paste0(i,x[which(corte.x(x)>e1)]))
+  ### no debería pasar peeeeero
   if(any(grepl("NA",x))){
     cat(x[grepl("NA",x)])
       unlink(paste0(i,x[grepl("NA",x)]))
   }
+  x<- x[which(corte.x(x)>fecha_modtap_last)]
+  if(length(x)>=1){
+  cat(paste("Existen archivos procesados con error previamente para",i," \n"))
+  cat(x)
+  unlink(x)
   cat("\n")
   }
   cat("\n")
   cat("\n")
   }
 
-fecha1 <- jd2date(corte.x(tail(list.files(fecha1),n=1))) # último día de mod-tap
+fecha1 <- jd2date(fecha_modtap_last) # último día de mod-tap
 # seq hasta la actualidad!
 fecha1<- seq.Date(as.Date(fecha1)+1,as.Date(format(Sys.Date(),"%Y-%m-%d")),by = "day") 
 # seq +1 hasta la actualidad!

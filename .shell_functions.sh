@@ -64,29 +64,37 @@ base_builder()
 ### si no exixten:
 
 tabdir=`cat ./.dir.txt` # esta debe ser la única ruta importante!
-local modtap=`echo "$tabdir" | sed '12q;d'`; modtap=${modtap#*,}; modtap=${modtap%,*}
+dataset=`echo "$tabdir" | sed '5q;d'`; dataset=${dataset#*,}; dataset=${dataset%,*}
 
 
-#### si existe modtap
-if [ -d "$modtap" ]
+
+base=("/mod/" "/c_mod/" "/mod10base/" "/myd/" "/c_myd/" "/myd10base/" "/mod_tap/" "/mod_myd/" "/c_mod_myd_max/" "/c_mod_myd_min/" "/mod_fsc/" "/myd_fsc/")
+
+#### chequeo si existe el dataset
+if [ -d "$dataset" ]
  then
 ### chequeo que existan imágenes en el área de estudio!
-echo "Existen las carpetas de modis en la base de datos"
+echo "Existe la base de datos"
+
 else
- for i in $tabdir 
-  do
-	 if [[ "$i" =~ 'modis/' ]] 
-	  then 
-		 i=${i#*,}
-		 mkdir $i
-	   fi			
-	done
+	mkdir $dataset
 fi 
+
+
+for i in "${base[@]}"
+do
+	if [ -d "$dataset$i" ]
+	then 
+		echo "fichero $dataset$i existe"
+	else
+		 mkdir $dataset$i
+	fi			
+done
+
 ### generé los directorios 
 
 ### chequeo existencia de imágenes!
-local x=$modtap"MOD_TAP.A2000055.snow.tif"
-echo $x
+local x=$dataset${base[6]}"MOD_TAP.A2000055_snow.tif"
 
 if [[ -f "$x" ]]; then
 echo "Existe información dentro de las carpetas!"
@@ -107,7 +115,7 @@ do
 curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MOD10A1&version=6&format=GeoTIFF&time=$fecha1,$fecha2&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"		
 done
 
-mv MOD10A1_* $modbase
+mv MOD10A1_* $dataset${base[2]}
 rm response-header.txt
 
 ### acá armo todas las bases en función de esta imágen: 
@@ -119,7 +127,7 @@ fi
 
 }
 
-####3
+####
 
 dataset_build () 
 {

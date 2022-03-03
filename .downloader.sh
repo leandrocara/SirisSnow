@@ -17,22 +17,18 @@ dirR=`dirname $SCRIPT`
 tabdir=`cat $dirR/.dir.txt` # esta debe ser la única ruta importante!
 ini="./.finic.txt"
 fin="./.ffin.txt"
-################### dir mod base
+################### dir mod dataset
 # 
-modbase=`echo "$tabdir" | sed '7q;d'`; modbase=${modbase#*,}; modbase=${modbase%,*}
+dataset=`echo "$tabdir" | sed '5q;d'`; modbase=${dataset#*,}; modbase=${dataset%,*}
 
-################### dir myd base
-# Ruta para los ffin.txt
-mydbase=`echo "$tabdir" | sed '10q;d'`; mydbase=${mydbase#*,}; mydbase=${mydbase%,*}
-
-################### dir log
+################### dir log	
 # 
-log=`echo "$tabdir" | sed '17q;d'` ; log=${log#*,}; log=${log%,*}
+log=`echo "$tabdir" | sed '8q;d'` ; log=${log#*,}; log=${log%,*}
 #####################
 lf=`date -I` 
 cd $dirR
 rm *.*
-##########
+########## traigo las funciones de shell! 
 source ./.shell_functions.sh
 
 ####
@@ -44,17 +40,18 @@ echo "";echo "Obteniendo el token para la descarga del web-server de la nasa";ec
 
 earthdata_token $usr $pass  > /dev/null
 
-#### corro la función que arma la estructura
+#### corro la función que arma la estructura ##
 base_builder 
 
 echo "Ejecutando el script armador_fechas"; echo "" ; echo "" 
 ### ojo con esto, hay que cambiarlo para que no borre el README
-echo $token
 
-rm -f *.*
+
+$ rm -v !("README.MD")
+
 Rscript ./.armador_fechas.R > /dev/null
 
-
+exit
 ########################################################################################## 
 ########################################################################################## 
 #### empiezo el ciclo iterativo
