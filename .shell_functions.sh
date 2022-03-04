@@ -8,16 +8,16 @@ nsidc_downloader()
 {
 ### lo primero que tengo que hacer es tirar una búsqueda para ver cuantas imágenes tengo para descargar
 
-#local x=`cat .tiles.txt | sed "$1q;d"`
-
-
 for i in `cat .tiles.txt`
 do
-#i=${i#*;}
-echo $3
-if [ $3 -gt 0 ]
 
-then
+var=`cat .var.txt`
+echo $var
+if [ $var -gt 0 ]
+
+then 
+echo $1
+echo $2
 curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MOD10A1&version=6&format=GeoTIFF&time=$1,$2&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"		
 ##
 curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MYD10A1&version=6&format=GeoTIFF&time=$1,$2&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"
@@ -30,30 +30,43 @@ done
 
 }
 
+
 #####
 nsidc_checker()
 {
-##### acá ha surgido un problema que hay que resolver
-if [ -e "*.zip" ]   		
-then 
- echo "Houston tenemos un problema!!"
- echo $fecha1 > .x.txt
- Rscript ./.apoyo.R 
- mkdir temporal
- mv *.zip ./temporal
- find . -name "*.zip" | while read filename
+
+var=`cat .var.txt`
+imgzip=(`find ./ -maxdepth 1 -name "*.zip"`)
+imgtif=(`find ./ -maxdepth 1 -name "*.tif"`)
+
+### se entiende que si tengo zip es porque var es 1
+if [ ${#imgzip[@]} -gt 0 ]; then 
+echo "detectado problema con la descarga de imágenes "
+echo "imágenes acopladas en un solo archivo comprimido"
+echo 0 > .var.txt
+echo $1 > .x.txt
+####
+Rscript ./.apoyo.R 
+mkdir temporal
+mv *.zip ./temporal
+
+find . -name "*.zip" | while read filename
                          do unzip -o -d "`dirname "$filename"`" "$filename"
                         done 
- find . -print | grep -i `cat .x.txt` |  while read filename
+                        
+find . -print | grep -i `cat .x.txt` |  while read filename
                                           do cp -a "$filename" . 
                                          done 
  rm -R ./temporal
 
-return 0
-else 
- echo "Todo normal después de descargar las imágenes"
-return 1
-	fi 
+elif [ ${#imgtif[@]} -eq 0 ] && [ $var -eq 0 ]; then 
+echo 1 > .var.txt
+ bash .downloader.sh
+ else 
+ echo "Imágenes descargadas normalmente"
+
+fi 
+
 }
 
 #############
@@ -63,12 +76,6 @@ base_builder()
 ### chequeo que existan los directorios de modis
 ### si no exixten:
 
-tabdir=`cat ./.dir.txt` # esta debe ser la única ruta importante!
-dataset=`echo "$tabdir" | sed '5q;d'`; dataset=${dataset#*,}; dataset=${dataset%,*}
-
-
-
-base=("/mod/" "/c_mod/" "/mod10base/" "/myd/" "/c_myd/" "/myd10base/" "/mod_tap/" "/mod_myd/" "/c_mod_myd_max/" "/c_mod_myd_min/" "/mod_fsc/" "/myd_fsc/")
 
 #### chequeo si existe el dataset
 if [ -d "$dataset" ]
@@ -115,7 +122,7 @@ do
 curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MOD10A1&version=6&format=GeoTIFF&time=$fecha1,$fecha2&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"		
 done
 
-mv MOD10A1_* $dataset${base[2]}
+mv MOD10A1_* $1${2[2]}
 rm response-header.txt
 
 ### acá armo todas las bases en función de esta imágen: 
@@ -160,6 +167,7 @@ done
 }
 
 # earthdata_usr
+
 earthdata_token () {
 ##################################### obtiene el token para la descarga
 curl -X POST --header	 "Content-Type: application/xml" -d "<token><username>$1</username><password>$2</password><client_id>zurdito</client_id><user_ip_address>192.168.0.1</user_ip_address></token>"  https://cmr.earthdata.nasa.gov/legacy-services/rest/tokens > token.xml
@@ -186,6 +194,7 @@ then
 		case $sino in
 		Y|y|s*|S*|t|T)
 
+			echo "Tenga en cuenta que el sistema no hará un chequeo automático, por lo cual asegúrese de ingresar bien sus datos"
 			echo "Ingrese por favor el nuevo usr and password"
 			echo -n "user:"
 			read usuario

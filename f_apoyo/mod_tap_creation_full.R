@@ -14,12 +14,12 @@ mod.tap.series.full <- function(){
   cat(paste0("\n Imagen de base a ser utilizada: ", names(base)))
    
   cat(paste0("\n Imagen a procesar: ",lmodmyd[1],"\n"))
-  
+
 for( i in 1:length(lmodmyd)){
   x <- raster(f.1(lmodmyd[i],dir.mod.myd))
   y <- rcl(x,l1[[1]])
   base <- ((base*y)+rcl(x,na20))
-  writeRaster(base,paste(dir.mod.tap,"/MOD_TAP.A",corte(lmodmyd[i]),".snow.tif"
+  writeRaster(base,paste(dir.mod.tap,"/MOD_TAP.A",corte(lmodmyd[i]),"_snow.tif"
                          ,sep=""),format="GTiff", overwrite=T,datatype="INT1U")
   
 }

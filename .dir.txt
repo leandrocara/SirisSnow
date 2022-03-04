@@ -1,11 +1,9 @@
-	archivo,directorio
-finic.txt,./finic.txt
-ffin.txt,./ffin.txt
+archivo,directorio
 dirR,./
 dir.modis.dataset,./modis/
-fun.dir,./f_apoyo/ 
+fun.dir,./f_apoyo/
 dir.otros,./apoyo/
 dir.log,./log/
 grilla_modis,./apoyo/grilla_modis_sudam.shp
 tabla_tiles,./apoyo/corners_sudam.csv
-base_shp,./apoyo/AOI_wgs84_sur.shp 	
+base_shp,./apoyo/AOI_wgs84_sur.shp

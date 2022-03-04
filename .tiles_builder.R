@@ -6,11 +6,11 @@
 ### 20 de Octubre de 2021
 library(raster)
 ##############################################################
-setwd("/home/lean/CONAE/SirisSnow/")
-d1<- read.table("./.dir.txt",sep = ",",stringsAsFactors = F)
-x <- shapefile(d1[9,2])#"~/Grilla modis sudamérica"
-tabla <- read.csv(d1[10,2],header = F)#"~/corners_sudam.csv",header = F)
-y <- shapefile(d1[11,2])#"~/AOI_wgs84_sur.shp")
+direcciones<- read.table("./.dir.txt",sep = ",",stringsAsFactors = F)
+x <- shapefile(direcciones[7,2])#"~/Grilla modis sudamérica"
+tabla <- read.csv(direcciones[8,2],header = F)#"~/corners_sudam.csv",header = F)
+
+y <- shapefile(direcciones[9,2])#"~/AOI_wgs84_sur.shp")
 
 z<- intersect(x,y)
 tabla <- tabla[grepl(paste(z@data$name,collapse = "|"),tabla[,1]),]

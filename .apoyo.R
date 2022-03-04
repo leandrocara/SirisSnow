@@ -12,6 +12,5 @@ funciones<- list.files(path = "./f_apoyo/",pattern = ".R$",full.names = T)
 for (i in 1:length(funciones)) 
   source (chdir =T ,file = funciones[i])
 
-
 write.table(paste0("A",date2jd(d1)),file = ".x.txt",col.names = F,row.names = F,quote = F)
 

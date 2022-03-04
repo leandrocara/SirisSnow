@@ -5,27 +5,25 @@ suppressMessages(library(rgdal))
 suppressMessages(library(sp))
 
 rutas <- read.table("./.dir.txt",sep = ",",stringsAsFactors = F)
-# rutas <- read.table("/home/leandro/server/servermod/dir.txt",sep = ",",stringsAsFactors = F)
-(apoyo <- paste0(rutas[14,2],"mascara_comp.tif"))
+apoyo <- paste0(rutas[5,2],"mascara_comp.tif")
 #mod   ##############################################################
-(dir.mbase <- rutas[7,2])#"/home/lean/Dropbox/tesis/servermod/modis/mod10base"
-(dir.mod <- rutas[5,2])#"/home/lean/Dropbox/tesis/servermod/modis/mod/"
-(dir.mod.c <- rutas[6,2])#"/home/lean/Dropbox/tesis/servermod/modis/c_mod/"
+dir.mbase <- paste0(rutas[3,2],"/mod10base")
+dir.mod  <- paste0(rutas[3,2],"/mod") 
+dir.mod.c <- paste0(rutas[3,2],"/c_mod")
 #myd   ##############################################################
-(dir.mybase <- rutas[10,2])#"/home/lean/Dropbox/tesis/servermod/modis/myd10base"
-(dir.myd <- rutas[8,2])#"/home/lean/Dropbox/tesis/servermod/modis/myd/"
-(dir.myd.c <- rutas[9,2])#"/home/lean/Dropbox/tesis/servermod/modis/c_myd/"
+dir.mybase <- paste0(rutas[3,2],"/myd10base")
+dir.myd <- paste0(rutas[3,2],"/myd")
+dir.myd.c <- paste0(rutas[3,2],"/c_myd")
 #   ##############################################################
+fun.dir <- rutas[4,2]
+dir.mod.tap  <- paste0(rutas[3,2],"/mod_tap")
+dir.mod.myd <- paste0(rutas[3,2],"/mod_myd")
+dir.otros <- rutas[5,2]#"/home/lean/Dropbox/tesis/servermod/modis/apoyo/"
 
-# rasterOptions(tmpdir = "/home/lean/RT")
-(fun.dir <- rutas[11,2])#"/home/lean/Dropbox/tesis/servermod/f_apoyo/"# ???
-(dir.mod.tap  <- rutas[12,2])#"/home/lean/Dropbox/tesis/servermod/modis/mod_tap/"
-(dir.mod.myd <- rutas[13,2])#"/home/lean/Dropbox/tesis/servermod/modis/mod_myd/"
-(dir.otros <- rutas[11,2])#"/home/lean/Dropbox/tesis/servermod/modis/apoyo/"
-
-(dir.mod.myd.c.max <-  rutas[15,2])#"/home/lean/Dropbox/tesis/servermod/modis/c_mod_myd_max/"
-(dir.mod.myd.c.min <-  rutas[16,2])#"/home/lean/Dropbox/tesis/servermod/modis/c_mod_myd_min/"
+dir.mod.myd.c.max <-  paste0(rutas[3,2],"/c_mod_myd_max")
+dir.mod.myd.c.min <-paste0(rutas[3,2],"/c_mod_myd_min")
 pos <- 10
+
 
 #######################################################################
 funciones<- list.files(path = fun.dir,pattern = ".R$",full.names = T)

@@ -15,19 +15,17 @@ SCRIPT=`realpath $0`
 dirR=`dirname $SCRIPT`
 
 tabdir=`cat $dirR/.dir.txt` # esta debe ser la única ruta importante!
-ini="./.finic.txt"
-fin="./.ffin.txt"
+ini="./finic.txt"
+fin="./ffin.txt"
+base=("/mod/" "/c_mod/" "/mod10base/" "/myd/" "/c_myd/" "/myd10base/" "/mod_tap/" "/mod_myd/" "/c_mod_myd_max/" "/c_mod_myd_min/" "/mod_fsc/" "/myd_fsc/")
 ################### dir mod dataset
-# 
-dataset=`echo "$tabdir" | sed '5q;d'`; modbase=${dataset#*,}; modbase=${dataset%,*}
-
+dataset=`echo "$tabdir" | sed '3q;d'`; dataset=${dataset#*,}; dataset=${dataset%,*}
 ################### dir log	
-# 
-log=`echo "$tabdir" | sed '8q;d'` ; log=${log#*,}; log=${log%,*}
+log=`echo "$tabdir" | sed '6q;d'` ; log=${log#*,}; log=${log%,*}
 #####################
 lf=`date -I` 
 cd $dirR
-rm *.*
+rm -f *.*
 ########## traigo las funciones de shell! 
 source ./.shell_functions.sh
 
@@ -41,17 +39,14 @@ echo "";echo "Obteniendo el token para la descarga del web-server de la nasa";ec
 earthdata_token $usr $pass  > /dev/null
 
 #### corro la función que arma la estructura ##
-base_builder 
+base_builder
 
 echo "Ejecutando el script armador_fechas"; echo "" ; echo "" 
 ### ojo con esto, hay que cambiarlo para que no borre el README
-
-
-$ rm -v !("README.MD")
+echo $token
 
 Rscript ./.armador_fechas.R > /dev/null
 
-exit
 ########################################################################################## 
 ########################################################################################## 
 #### empiezo el ciclo iterativo
@@ -59,15 +54,19 @@ exit
 
 echo "Iniciando con la descarga de imágenes"
 
+# var es la diferencia en días para fechas, el sistema tiene un error de base que levanta algunas veces dos imágenes
+# para un var=1 y una imagen para var=0, y en otras portunidades levanta 1 imágen para var=1 y 0 para var=0
+# var debería estar en un archivo para que cuando se ejecute, el script tenga guardado el resultado anterior.  
+# debería ser fractal, si corre con var=1 => zip, reescribe var=0 y continua, 
+# si  var=0 => img=0, pasa a var 1 y corre de vuelta. 
+# si con var 1 no levanta nada, escribe var 0 y sale. 
+# por lógica debería arrancar con 0 a menos que se haya abortado
 
-var=1
-m=`cat .ffin.txt | wc -l`	
+m=`cat ffin.txt | wc -l`	
 
+while [ $m -gt 1 ]; do
 
-###
-while [  $m -gt 1 ]; do
-
-m=`cat .ffin.txt | wc -l`
+m=`cat ffin.txt | wc -l`
 
 #fecha1=`echo $j` ## esta es la fecha del día que voy a descargar
 echo "############################################################"
@@ -83,8 +82,8 @@ echo "INICIO procesamiento para el día: $fecha1 "
 date +"%T"
 ####
 
-nsidc_downloader $fecha1 $fecha2 $var; vv="$(nsidc_checker)"
-var=$?
+nsidc_downloader $fecha1 $fecha2 $var
+nsidc_checker $fecha1
 
 echo "################"
 
@@ -101,8 +100,8 @@ x=`ls *.tif | wc -l`
 
 if [ $x -gt 0 ]
 then 
-	mv MOD10A1_* $modbase
-	mv MYD10A1_* $mydbase
+	mv MOD10A1_* $dataset${base[2]}
+	mv MYD10A1_* $dataset${base[5]}
 else 
 	continue
 fi
@@ -111,9 +110,15 @@ rm response-header.txt
 rm *.com
 echo "" ;echo "Ejecutando el armador de información combinada para nieve y nubes"; echo "" 
 
+##################################################################
+echo " corro el script mod nieve_nubes"
+
 Rscript .mod_nieve_nubes.R
-echo "Script 		mod_nieve_nubes.R finalizado"
+echo "Script mod_nieve_nubes.R finalizado"
 date +"%T"
+##################################################################
+
+
 ########################################################################################################################################
 
 Rscript .mosaic_to_mxd_SCA_CCA.R 
@@ -123,13 +128,12 @@ date +"%T"
 echo "FIN procesamiento día: $fecha1" 
 date +"%T"
 echo "#############################################################"
-
 done
 ################### elimina el token de descarga!
 curl -X DELETE --header "Content-Type: application/xml" https://cmr.earthdata.nasa.gov/legacy-services/rest/tokens/$token
-################
-
+###############
 rm -f *.*
+exit 0
 
 
 

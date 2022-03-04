@@ -5,9 +5,7 @@
 #### leandrocara@hotmail.com
 
 ############################################
-# d1<- read.table("/home/leandro/server/servermod/dir.txt",sep = ",",stringsAsFactors = F)
-# setwd("/home/lean/CONICET/REPOS/tesis/Daemons/servermod/")
-d1<- read.table("./.dir.txt",sep = ",",stringsAsFactors = F)
+direcciones<- read.table("./.dir.txt",sep = ",",stringsAsFactors = F)
 
 funciones<- list.files(path = "./f_apoyo/",pattern = ".R$",full.names = T)
 for (i in 1:length(funciones)) 
@@ -15,20 +13,20 @@ for (i in 1:length(funciones))
 
 
 #mod   ##############################################################
-dir.mod.tap  <-   paste0(d1[5,2],"/mod_tap/")
-dir.mod  <-   paste0(d1[5,2],"/mod/")
-dir.mod.c  <- paste0(d1[5,2],"/c_mod/")
-dir.mbase <-  paste0(d1[5,2],"/mod10base/")
+dir.mod.tap  <-   paste0(direcciones[3,2],"/mod_tap/")
+dir.mod  <-   paste0(direcciones[3,2],"/mod/")
+dir.mod.c  <- paste0(direcciones[3,2],"/c_mod/")
+dir.mbase <-  paste0(direcciones[3,2],"/mod10base/")
 
 #myd   ##############################################################
-dir.myd  <- paste0(d1[5,2],"/myd/")
-dir.myd.c  <- paste0(d1[5,2],"/c_myd/")
-dir.mybase<- paste0(d1[5,2],"/myd10base/")
+dir.myd  <- paste0(direcciones[3,2],"/myd/")
+dir.myd.c  <- paste0(direcciones[3,2],"/c_myd/")
+dir.mybase<- paste0(direcciones[3,2],"/myd10base/")
 
 #mod myd combinados ##############################################################
-dir.mod.myd.max <- paste0(d1[5,2],"/c_mod_myd_max/")  
-dir.mod.myd.min <- paste0(d1[5,2],"/c_mod_myd_min/")
-dir.mod.myd  <- paste0(d1[5,2],"/mod_myd/")
+dir.mod.myd.max <- paste0(direcciones[3,2],"/c_mod_myd_max/")  
+dir.mod.myd.min <- paste0(direcciones[3,2],"/c_mod_myd_min/")
+dir.mod.myd  <- paste0(direcciones[3,2],"/mod_myd/")
 #   ##############################################################
 ficheros <- c(dir.mod,dir.mod.c,dir.myd,dir.myd.c,dir.mod.myd.max,dir.mod.myd.min,dir.mod.myd)
 dir.mod.tap
@@ -67,5 +65,5 @@ fecha1<- seq.Date(as.Date(fecha1)+1,as.Date(format(Sys.Date(),"%Y-%m-%d")),by = 
 # seq +1 hasta la actualidad!
 fecha2 <- seq.Date(fecha1[2],as.Date(format(Sys.Date(),"%Y-%m-%d")),by = "day")
 
-write.table(as.data.frame(fecha1),d1[2,2],col.names = F,row.names = F,quote = F)
-write.table(as.data.frame(fecha2),d1[3,2],col.names = F,row.names = F,quote = F)
+write.table(as.data.frame(fecha1),"./finic.txt",col.names = F,row.names = F,quote = F)
+write.table(as.data.frame(fecha2),"./ffin.txt",col.names = F,row.names = F,quote = F)

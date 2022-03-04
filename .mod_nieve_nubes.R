@@ -5,19 +5,21 @@ rutas <- read.table("./.dir.txt",sep = ",",stringsAsFactors = F)
 
 
 rcl <- function(x,y){reclassify(x, y, include.lowest=FALSE, right=NA)}
-apoyo <- rutas[14,2]#"/home/lean/Dropbox/tesis/servermod/modis/apoyo/mascara_comp.tif"
-apoyo <- paste0(apoyo,"mascara_comp.tif")
+
+apoyo <- paste0(rutas[5,2],"mascara_comp.tif")
 #mod   ##############################################################
-dir.mbase <- rutas[7,2]#"/home/lean/Dropbox/tesis/servermod/modis/mod10base"
-dir.mod <- rutas[5,2]#"/home/lean/Dropbox/tesis/servermod/modis/mod/"
-dir.mod.c <- rutas[6,2]#"/home/lean/Dropbox/tesis/servermod/modis/c_mod/"
-dir.mod.fsc <- rutas[21,2]#"/home/lean/Dropbox/tesis/servermod/modis/mod_fsc/"
+dir.mbase <- paste0(rutas[3,2],"/mod10base")#"/home/lean/Dropbox/tesis/servermod/modis/mod10base"
+dir.mod  <- paste0(rutas[3,2],"/mod") #"/home/lean/Dropbox/tesis/servermod/modis/mod/"
+dir.mod.c <- paste0(rutas[3,2],"/c_mod")#"/home/lean/Dropbox/tesis/servermod/modis/c_mod/"
+dir.mod.fsc <-  paste0(rutas[3,2],"/mod_fsc")#"/home/lean/Dropbox/tesis/servermod/modis/mod_fsc/"
+
 #myd   ##############################################################
-dir.mybase <- rutas[10,2]#"/home/lean/Dropbox/tesis/servermod/modis/myd10base"
-dir.myd <- rutas[8,2]#"/home/lean/Dropbox/tesis/servermod/modis/myd/"
-dir.myd.c <- rutas[9,2]#"/home/lean/Dropbox/tesis/servermod/modis/c_myd/"
-dir.myd.fsc <- rutas[22,2]#"/home/lean/Dropbox/tesis/servermod/modis/myd_fsc/"
+dir.mybase <- paste0(rutas[3,2],"/myd10base")#"/home/lean/Dropbox/tesis/servermod/modis/myd10base"
+dir.myd <- paste0(rutas[3,2],"/myd")#"/home/lean/Dropbox/tesis/servermod/modis/myd/"
+dir.myd.c <- paste0(rutas[3,2],"/c_myd")#"/home/lean/Dropbox/tesis/servermod/modis/c_myd/"
+dir.myd.fsc <- paste0(rutas[3,2],"/myd_fsc")#"/home/lean/Dropbox/tesis/servermod/modis/myd_fsc/"
 #   ##############################################################
+
 ### chequeo la info que se encuentra en mbase
 if(length(list.files(dir.mbase))>=1){ 
   p1 <- regexec("A[0-9]{6}",list.files(dir.mbase)[1])
@@ -28,7 +30,6 @@ if(length(list.files(dir.mbase))>=1){
   }
 p1 <- substr(list.files(pp1)[1],p1[[1]][1],p1[[1]][1]+7)
 #   ##############################################################
-
 # 0-40: Soil
 # 40-100: snow cover
 # 200: missing data
@@ -88,7 +89,7 @@ cat(paste0("Número de imágenes ",mcdtipo[m], ": ",length(lmod),"\n"))
         }
    
 ### CCA
-   writeRaster(rcl(modfsc,CCA),paste0(dir2[m],"/",mcdtipo[m],"_",p1,"_Clouds_Cover_Area.tif"),
+   writeRaster(rcl(modfsc,CCA),paste0(dir2[m],"/",mcdtipo[m],".",p1,"_Clouds_Cover_Area.tif"),
             format="GTiff", overwrite=T,datatype="INT1U")
 ### SCA
 writeRaster(rcl(modfsc,SCA),paste0(dir3[m],"/",mcdtipo[m],".",p1,"_Snow_Cover_Area.tif"),
@@ -105,7 +106,7 @@ file.remove(lmod)
 
 cat("\n")
 # cat(paste0("Imagen ",p1," guardada para nieve y nubes\n"))}
-cat("script mod_nieve_nubes.R terminado\n")
+cat("script mod_nieve_nubes.R finalizado correctamente\n")
 cat("######################\n")
 
 

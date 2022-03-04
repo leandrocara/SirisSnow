@@ -3,7 +3,7 @@
 
 reclas.v6 <-function(verbose=F){ 
   ### Leandro Cara 
-  ### octubre 2018 
+  ### Marzo 2022
   ### leandrocara@hotmail.com
   
   ### variables que va a pasar la func derecho
@@ -51,7 +51,8 @@ reclas.v6 <-function(verbose=F){
   colector_modtap <- vector()
   
     cat("------------------------------------------------------------------------------------------\n")
-  for (i in 1:length(lmod)){
+  
+    for (i in 1:length(lmod)){
     ## si existe el mod-myd de la imagen i no hago nada, porque se entiende que está todo hecho.
     if(length(list.files(dir.mod.myd,corte(lmod[i]),full.names = T))==0 &
        !grepl("missing",lmod[i])){
@@ -67,7 +68,7 @@ reclas.v6 <-function(verbose=F){
       colector_modtap <- c(colector_modtap,corte(lmod[i]))
             ## llama al raster reclasificado
             mod <- raster(paste(dir.mod,lmod[i],sep="/"))
-          # si existe la capa de nubes llama a la capa de nubes siempre existe!
+          ### la capa de nubes siempre existe!
             c.mod <- raster(f.1(lmod[i],dir.mod.c))
           ### busco la correspondencia de la imagen mod en la lista de imágenes myd
         j <- match(corte(lmod[i]),corte(lmyd))
@@ -99,14 +100,14 @@ reclas.v6 <-function(verbose=F){
        cat(paste("Creando: MOD.MYD.A",corte(lmyd[j]),".clouds.max.tif",sep=""))
        cat("\n")    
        cat("\n")    
-       writeRaster(((c.mod+c.myd)-(c.mod*c.myd)),paste(dir.mod.myd.c.max,"/MOD.MYD.A",corte(lmyd[j]),
-            ".clouds.max.tif",sep=""),format="GTiff", overwrite=T,datatype="INT1U")
+       writeRaster(((c.mod+c.myd)-(c.mod*c.myd)),paste(dir.mod.myd.c.max,"/MOD_MYD.A",corte(lmyd[j]),
+            "_clouds_max.tif",sep=""),format="GTiff", overwrite=T,datatype="INT1U")
        
        cat(paste("Creando: MOD.MYD.A",corte(lmyd[j]),".clouds.min.tif",sep=""))
        cat("\n")    
        cat("\n")    
-       writeRaster(c.mod*c.myd,paste(dir.mod.myd.c.min,"/MOD.MYD.A",corte(lmyd[j]),
-            ".clouds.min.tif",sep=""),format="GTiff", overwrite=T,datatype="INT1U")
+       writeRaster(c.mod*c.myd,paste(dir.mod.myd.c.min,"/MOD_MYD.A",corte(lmyd[j]),
+            "_clouds_min.tif",sep=""),format="GTiff", overwrite=T,datatype="INT1U")
           }
           }
 #########################################################################################################
@@ -118,11 +119,11 @@ reclas.v6 <-function(verbose=F){
             mod.myd <- mask.mod*myd
             mod.myd <- rcl(mod,dos20) + mod.myd
             
-       cat(paste("Creando: MOD.MYD.A",corte(lmyd[j]),".snow.cover.area.tif",sep=""))
+       cat(paste("Creando: MOD_MYD.A",corte(lmyd[j]),"_snow_cover_area.tif",sep=""))
        cat("\n")    
        cat("\n")    
-       writeRaster(mod.myd,paste(dir.mod.myd,"/MOD.MYD.A",corte(lmyd[j]),
-       ".snow.cover.area.tif",sep=""),format="GTiff", overwrite=T,datatype='INT1U')
+       writeRaster(mod.myd,paste(dir.mod.myd,"/MOD_MYD.A",corte(lmyd[j]),
+       "_snow_cover_area.tif",sep=""),format="GTiff", overwrite=T,datatype='INT1U')
           }
 #########################################################################################################
          ### este else responde a si  hay un match con las img myd pero es un missing
@@ -142,8 +143,8 @@ reclas.v6 <-function(verbose=F){
              cat(paste("Creando: MOD.MYD.A",corte(lmod[i]),".MOD.clouds.max.tif",sep=""))  
              cat("\n")    
              cat("\n")    
-            writeRaster(c.mod,paste(dir.mod.myd.c.max,"/MOD.MYD.A",corte(lmod[i]),
-                              ".MOD.clouds.max.tif",sep=""),format="GTiff", overwrite=T)}
+            writeRaster(c.mod,paste(dir.mod.myd.c.max,"/MOD_MYD.A",corte(lmod[i]),
+                              "_MOD_clouds_max.tif",sep=""),format="GTiff", overwrite=T)}
    
           ### si no existe la imagen de nieve mod.myd la creo
        
@@ -153,7 +154,7 @@ reclas.v6 <-function(verbose=F){
        cat(paste("MOD.MYD.A",corte(lmod[i]),".MOD.snow.cover.area.tif\n",sep=""))
        cat("\n")    
        cat("\n")    
-       writeRaster(mod,paste(dir.mod.myd,"/MOD.MYD.A",corte(lmod[i]),".MOD.snow.cover.area.tif"
+       writeRaster(mod,paste(dir.mod.myd,"/MOD_MYD.A",corte(lmod[i]),"_MOD_snow_cover_area.tif"
                                   ,sep=""),format="GTiff", overwrite=T, datatype='INT1U')}
         }
 #########################################################################################################
@@ -168,12 +169,12 @@ reclas.v6 <-function(verbose=F){
             ## grabo mod.myd con un MOD! 
             cat("creo la imagen\n")
             cat("\n")    
-            cat(paste("Creando: MOD.MYD.A",corte(lmod[i]),".MOD.clouds.max.tif",sep=""))
+            cat(paste("Creando: MOD_MYD.A",corte(lmod[i]),"_MOD_clouds_max.tif",sep=""))
             cat("\n")    
             cat("\n")    
             
-            writeRaster(c.mod,paste(dir.mod.myd.c.max,"/MOD.MYD.A",corte(lmod[i]),
-                              ".MOD.clouds.max.tif",sep=""),format="GTiff", overwrite=T)}
+            writeRaster(c.mod,paste(dir.mod.myd.c.max,"/MOD_MYD.A",corte(lmod[i]),
+                              "_MOD_clouds_max.tif",sep=""),format="GTiff", overwrite=T)}
           
           ### si no existe la imagen de nieve mod.myd la creo
              
@@ -183,7 +184,7 @@ reclas.v6 <-function(verbose=F){
              cat(paste("Creando: MOD.MYD.A",corte(lmod[i]),".MOD.snow.cover.area.tif",sep=""))
              cat("\n")    
              cat("\n")    
-              writeRaster(mod,paste(dir.mod.myd,"/MOD.MYD.A",corte(lmod[i]),".MOD.snow.cover.area.tif"
+              writeRaster(mod,paste(dir.mod.myd,"/MOD_MYD.A",corte(lmod[i]),"_MOD_snow_cover_area.tif"
                                   ,sep=""),format="GTiff", overwrite=T, datatype='INT1U')}
         }
       
@@ -256,14 +257,14 @@ reclas.v6 <-function(verbose=F){
             cat("\n")    
             cat("\n")    
             
-            writeRaster(c.myd, paste(dir.mod.myd.c.max,"/MOD.MYD.A",corte(lmyd[j]),
-                              ".MYD.clouds.max.tif",sep=""),format="GTiff", overwrite=T, datatype='INT1U')}
+            writeRaster(c.myd, paste(dir.mod.myd.c.max,"/MOD_MYD.A",corte(lmyd[j]),
+                              "_MYD_clouds_max.tif",sep=""),format="GTiff", overwrite=T, datatype='INT1U')}
           ## si NO existe mod.myd, lo creo!
           if(length(list.files(dir.mod.myd,corte(lmyd[j]),full.names = T))==0){
             cat("creo mod.myd.MYD\n")
             cat(paste("MOD.MYD.A",corte(lmyd[j]),".MYD.snow.cover.area.tif",sep=""))
             
-            writeRaster(myd,paste(dir.mod.myd,"/MOD.MYD.A",corte(lmyd[j]),".MYD.snow.cover.area.tif"
+            writeRaster(myd,paste(dir.mod.myd,"/MOD_MYD.A",corte(lmyd[j]),"_MYD_snow_cover_area.tif"
                                   ,sep=""),format="GTiff", overwrite=T, datatype='INT1U')}
         }else{
           cat("ATENCIÓN, IMAGEN MOD FALTANTE E IMAGEN MYD FALTANTE!!!! NO SE CREARÁ
