@@ -4,6 +4,8 @@ suppressMessages(library(raster))
 suppressMessages(library(rgdal))
 suppressMessages(library(sp))
 
+
+
 rutas <- read.table("./.dir.txt",sep = ",",stringsAsFactors = F)
 apoyo <- paste0(rutas[5,2],"mascara_comp.tif")
 #mod   ##############################################################
@@ -21,21 +23,16 @@ dir.mod.myd.c.max <-  paste0(rutas[3,2],"/c_mod_myd_max")
 dir.mod.myd.c.min <-paste0(rutas[3,2],"/c_mod_myd_min")
 dir.mod.tap  <- paste0(rutas[3,2],"/mod_tap")
 
-
 #######################################################################
 funciones<- list.files(path = fun.dir,pattern = ".R$",full.names = T)
 for (i in 1:length(funciones)) source (chdir =T ,file = funciones[i])
 #######################################################################
-cat("\n Comenzando el prrocesamiento de los mosaicos TIF\n")
-
-cat("\n")
-cat("#########\n")
-cat("\n")
+cat("\n Comenzando el prrocesamiento de los mosaicos TIF\n\n")
 
 #################################################### 
 cat("\nProcesamiento de SCA y CCA Para MOD10A1 y MYD10A1:\n")
 
-#### para qué levanto todo!!!
+##
 lmod <- list.files(path=dir.mod,pattern = ".tif$")
 lmyd <- list.files(path=dir.myd,pattern = ".tif$")
 ##############
@@ -45,6 +42,9 @@ lmyd <- list.files(path=dir.myd,pattern = ".tif$")
 ### matríz para armar la imágenes de nubes
 bool.clouds <- as.matrix(data.frame(col1=c(2,0,1),col2=c(1,0,0)))
 dos20 <- as.matrix(data.frame(col1=c(2),col2=c(0)))
+bNA <- as.matrix(data.frame(col1=c(2,NA,0,1),col2=c(1,1,0,0)))
+na20 <- as.matrix(data.frame(col1=c(2,NA),col2=c(0,0)))
+
 ##############
 #### última fecha lmod_tap procesada!
 lmod_tap <- list.files(path = dir.mod.tap,pattern = ".tif$")
@@ -77,7 +77,7 @@ if(length(lmod)>0 & length(lmyd)>0){
   ##### snow cover generation
     cat(paste0("Creando: MOD_MYD.A",lmod_tap,"_snow_cover_area.tif","\n","\n"))
     #
-    mask.mod <-  reclassify(mod, bool.clouds, include.lowest=FALSE, right=NA) 
+    mask.mod <-  rcl(mod, bool.clouds)
     mod.myd <- mask.mod*myd
     mod.myd <- rcl(mod,dos20) + mod.myd
     writeRaster(mod.myd,paste(dir.mod.myd,"/MOD_MYD.A",lmod_tap,
@@ -121,13 +121,6 @@ if(length(lmod)>0 & length(lmyd)>0){
 
 # tpo2 <- mod.tap.series.full()
 
-bNA<- as.matrix(data.frame(col1=c(2,NA,0,1),col2=c(1,1,0,0)))
-b0<- as.matrix(data.frame(col1=c(0,2,NA,1),col2=c(1,0,0,0)))
-b1<- as.matrix(data.frame(col1=c(1,2,NA,0),col2=c(1,0,0,0)))
-na20 <- as.matrix(data.frame(col1=c(2,NA),col2=c(0,0)))
-cero2na <- as.matrix(data.frame(col1=c(0,NA),col2=c(2,2)))
-na2two <- as.matrix(data.frame(col1=c(NA),col2=c(2)))
-l1 <- list(bNA,b0,b1)
 
 base<- raster(paste0(dir.mod.tap,"/",mod_tap))
 
@@ -136,7 +129,7 @@ mod.myd_base <- list.files(dir.mod.myd)
 mod.myd_base<- mod.myd_base[length(mod.myd_base)]
 
 x <- raster(paste0(dir.mod.myd,"/",mod.myd_base))
-y <- rcl(x,l1[[1]])
+y <- rcl(x,bNA)
 base <- ((base*y)+rcl(x,na20))
 
 if(as.numeric(corte(mod.myd_base))<=as.numeric(corte(mod_tap))){
@@ -154,7 +147,6 @@ cat(paste0("\n Imagen de base a ser utilizada: ", names(base)))
                        ,sep=""),format="GTiff", overwrite=T,datatype="INT1U")
   
 }
-
 
 cat("Proceso MOD-TAP Finalizazo\n")
 

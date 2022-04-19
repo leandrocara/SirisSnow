@@ -45,7 +45,6 @@ echo "";echo "Obteniendo el token para la descarga del web-server de la nasa";ec
 
 earthdata_token $usr $pass  > /dev/null
 
-
 #### corro la función que arma la estructura ##
 base_builder
 
@@ -54,7 +53,6 @@ echo "Ejecutando el script armador_fechas"; echo "" ; echo ""
 ### ojo con esto, hay que cambiarlo para que no borre el README
 echo $token
 
-
 Rscript ./.armador_fechas.R > /dev/null
 ########################################################################################## 
 ########################################################################################## 
@@ -62,7 +60,6 @@ Rscript ./.armador_fechas.R > /dev/null
 ########################################################################################## 
 
 echo "Iniciando con la descarga de imágenes"
-
 # var es la diferencia en días para fechas, el sistema tiene un error de base que levanta algunas veces dos imágenes
 # para un var=1 y una imagen para var=0, y en otras portunidades levanta 1 imágen para var=1 y 0 para var=0
 # var debería estar en un archivo para que cuando se ejecute, el script tenga guardado el resultado anterior.  
@@ -85,13 +82,13 @@ fecha2=`cat $fin | sed "$1q;d"`
 sed -i '1d' $fin
 sed -i '1d' $ini
 
-
 echo "#############################################################"
 echo "INICIO procesamiento para el día: $fecha1 "
 date +"%T"
 ####
 ### acá tendría que poner un chequeo de conexión
 ### revisar estas dos funciones, porque no debería tener diferencias a partir de ahora!
+check_connection --stand-alone
 nsidc_downloader $fecha1 $fecha2 $var
 nsidc_checker $fecha1
 

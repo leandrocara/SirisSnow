@@ -6,4 +6,4 @@ dir.otros,./apoyo/
 dir.log,./log/
 grilla_modis,./apoyo/grilla_modis_sudam.shp
 tabla_tiles,./apoyo/corners_sudam.csv
-base_shp,./apoyo/AOI_mini.shp
+base_shp,./apoyo/AOI_wgs84_completo.shp
