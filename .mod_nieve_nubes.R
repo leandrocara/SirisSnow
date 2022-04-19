@@ -3,7 +3,7 @@ suppressMessages(library("raster"))
 ### de acá debería salir la mod y la c.mod nada más!
 rutas <- read.table("./.dir.txt",sep = ",",stringsAsFactors = F)
 
-
+### solo resume reclassify
 rcl <- function(x,y){reclassify(x, y, include.lowest=FALSE, right=NA)}
 
 apoyo <- paste0(rutas[5,2],"mascara_comp.tif")
@@ -20,6 +20,8 @@ dir.myd.c <- paste0(rutas[3,2],"/c_myd")#"/home/lean/Dropbox/tesis/servermod/mod
 dir.myd.fsc <- paste0(rutas[3,2],"/myd_fsc")#"/home/lean/Dropbox/tesis/servermod/modis/myd_fsc/"
 #   ##############################################################
 
+### levanto la fecha del producto a armar
+## supone que si no está en mod está en myd
 ### chequeo la info que se encuentra en mbase
 if(length(list.files(dir.mbase))>=1){ 
   p1 <- regexec("A[0-9]{6}",list.files(dir.mbase)[1])
@@ -80,8 +82,6 @@ cat(paste0("Número de imágenes ",mcdtipo[m], ": ",length(lmod),"\n"))
   modfsc <- bse
 
   for(i in 1:length(lmod)){
-    # write.table(x = paste(mcdtipo[m],(i),sep=";"),file = paste0(args[1],"/wdimg.txt"),row.names = F,col.names = F,quote = F)
-    ## llamo al raster
     mod <- raster(lmod[i])
     xmod <- rcl(mod,fsc.mosaic)
     modfsc <- mosaic(resample(xmod,bse,method="ngb"),modfsc,fun=max)

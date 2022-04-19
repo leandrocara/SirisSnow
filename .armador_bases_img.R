@@ -24,12 +24,17 @@ base <- raster(x[1])
 ext_error <- vector()
 y <- shapefile(rutas[9,2])
 
-for( i in 2:length(x)){
-cat(paste0("Corriendo el proceso de armado de base. N° de iteracicón: ",i,"\n"))
-
-base <- extend(base,raster(x[i]))
-base <- crop (base,y)
-base <- rcl(base,NA20)
+if(length(x)>=2){
+  for( i in 2:length(x)){
+    cat(paste0("Corriendo el proceso de armado de base. N° de iteracicón: ",i,"\n"))
+    base <- extend(base,raster(x[i]))
+    base <- crop (base,y)
+    base <- rcl(base,NA20)
+  }
+  }else{
+    cat("Armando la base de las imágenes")
+    base <- crop (base,y)
+    base <- rcl(base,NA20)
 }
 
 #### hasta acá tenemos armada la base!!!

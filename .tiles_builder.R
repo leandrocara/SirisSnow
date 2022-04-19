@@ -6,6 +6,8 @@
 ### 20 de Octubre de 2021
 library(raster)
 ##############################################################
+# setwd("/home/lean/CONICET/REPOS/SirisSnow/")
+##############################################################
 direcciones<- read.table("./.dir.txt",sep = ",",stringsAsFactors = F)
 x <- shapefile(direcciones[7,2])#"~/Grilla modis sudamérica"
 tabla <- read.csv(direcciones[8,2],header = F)#"~/corners_sudam.csv",header = F)

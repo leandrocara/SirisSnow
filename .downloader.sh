@@ -14,15 +14,22 @@ echo ""
 SCRIPT=`realpath $0`
 dirR=`dirname $SCRIPT`
 
+### lista de subdirectorios para ir armando la info de base
 tabdir=`cat $dirR/.dir.txt` # esta debe ser la única ruta importante!
-ini="./finic.txt"
-fin="./ffin.txt"
+
+# Temporales para armar la secuencia de descarga 
+ini="./finic.txt"; fin="./ffin.txt"
+
+## Subdirectorios de los subprouctos MODIS
 base=("/mod/" "/c_mod/" "/mod10base/" "/myd/" "/c_myd/" "/myd10base/" "/mod_tap/" "/mod_myd/" "/c_mod_myd_max/" "/c_mod_myd_min/" "/mod_fsc/" "/myd_fsc/")
-################### dir mod dataset
+
+################### dir modis base
 dataset=`echo "$tabdir" | sed '3q;d'`; dataset=${dataset#*,}; dataset=${dataset%,*}
+
 ################### dir log	
 log=`echo "$tabdir" | sed '6q;d'` ; log=${log#*,}; log=${log%,*}
 #####################
+
 lf=`date -I` 
 cd $dirR
 rm -f *.*
@@ -30,7 +37,7 @@ rm -f *.*
 source ./.shell_functions.sh
 
 ####
-#(2) earthdata_usr
+#(2) earthdata_usr 
 echo "Executing earthdata_usr"
 earthdata_usr -y -s
 
@@ -38,15 +45,17 @@ echo "";echo "Obteniendo el token para la descarga del web-server de la nasa";ec
 
 earthdata_token $usr $pass  > /dev/null
 
+
 #### corro la función que arma la estructura ##
 base_builder
+
 
 echo "Ejecutando el script armador_fechas"; echo "" ; echo "" 
 ### ojo con esto, hay que cambiarlo para que no borre el README
 echo $token
 
-Rscript ./.armador_fechas.R > /dev/null
 
+Rscript ./.armador_fechas.R > /dev/null
 ########################################################################################## 
 ########################################################################################## 
 #### empiezo el ciclo iterativo
@@ -81,7 +90,8 @@ echo "#############################################################"
 echo "INICIO procesamiento para el día: $fecha1 "
 date +"%T"
 ####
-
+### acá tendría que poner un chequeo de conexión
+### revisar estas dos funciones, porque no debería tener diferencias a partir de ahora!
 nsidc_downloader $fecha1 $fecha2 $var
 nsidc_checker $fecha1
 
