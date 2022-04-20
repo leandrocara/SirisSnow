@@ -108,7 +108,7 @@ echo "################"
 
 echo "" ;echo "Imágenes descargadas para la fecha $fecha1" 	; echo ""  ; echo "#"  ; ls | grep '.tif'		; echo "#"  ; echo "" 
 date +"%T"
-
+		
 x=`ls *.tif | wc -l`
 
 if [ $x -gt 0 ]

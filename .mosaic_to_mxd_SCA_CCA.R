@@ -135,9 +135,12 @@ base <- ((base*y)+rcl(x,na20))
 if(as.numeric(corte(mod.myd_base))<=as.numeric(corte(mod_tap))){
   cat("No se ha generado información nueva para crear MOD TAP\n
       Pero hay más de 4 días de información faltante")
+cat(paste0("imagen de base utilizada:",mod_tap,"\n
+          imagen a procesar:",mod.myd_base[length(mod.myd_base)],"\n
+          imagen a generar:","/MOD_TAP.A",lmod_tap,"_MISSING_mod_myd_snow"))
 
-  writeRaster(base,paste(dir.mod.tap,"/MOD_TAP.A",lmod_tap,"_MISSING_BASE_snow.tif"
-                       ,sep=""),format="GTiff", overwrite=T,datatype="INT1U")
+  writeRaster(base,paste0(dir.mod.tap,"/MOD_TAP.A",lmod_tap,"_MISSING_mod_myd_snow.tif"),
+              format="GTiff", overwrite=T,datatype="INT1U")
   
 }else{
 cat(paste0("\n Imagen a procesar: ",mod.myd_base,"\n"))
