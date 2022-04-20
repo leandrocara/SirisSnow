@@ -121,6 +121,7 @@ fi
 
 rm response-header.txt
 rm *.com
+rm *.xml
 echo "" ;echo "Ejecutando el armador de información combinada para nieve y nubes"; echo "" 
 
 ##################################################################

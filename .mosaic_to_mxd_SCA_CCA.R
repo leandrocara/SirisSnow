@@ -14,14 +14,20 @@ dir.mod.c <- paste0(rutas[3,2],"/c_mod")
 #myd   ##############################################################
 dir.myd <- paste0(rutas[3,2],"/myd")
 dir.myd.c <- paste0(rutas[3,2],"/c_myd")
-#   ##############################################################
-fun.dir <- rutas[4,2]
-pos <- 10
-#   ##############################################################
+# combinadas ##############################################################
 dir.mod.myd <- paste0(rutas[3,2],"/mod_myd")
 dir.mod.myd.c.max <-  paste0(rutas[3,2],"/c_mod_myd_max")
 dir.mod.myd.c.min <-paste0(rutas[3,2],"/c_mod_myd_min")
 dir.mod.tap  <- paste0(rutas[3,2],"/mod_tap")
+#   ##############################################################
+fun.dir <- rutas[4,2]
+pos <- 10
+#######################################################################
+### matrices para armar las imágenes de nubes y nieve rellenadas
+bool.clouds <- as.matrix(data.frame(col1=c(2,0,1),col2=c(1,0,0)))
+dos20 <- as.matrix(data.frame(col1=c(2),col2=c(0)))
+bNA <- as.matrix(data.frame(col1=c(2,NA,0,1),col2=c(1,1,0,0)))
+na20 <- as.matrix(data.frame(col1=c(2,NA),col2=c(0,0)))
 
 #######################################################################
 funciones<- list.files(path = fun.dir,pattern = ".R$",full.names = T)
@@ -39,18 +45,15 @@ lmyd <- list.files(path=dir.myd,pattern = ".tif$")
 # acá vamos a poner una cláusula para achicar los lmxd..
 
 ##############
-### matríz para armar la imágenes de nubes
-bool.clouds <- as.matrix(data.frame(col1=c(2,0,1),col2=c(1,0,0)))
-dos20 <- as.matrix(data.frame(col1=c(2),col2=c(0)))
-bNA <- as.matrix(data.frame(col1=c(2,NA,0,1),col2=c(1,1,0,0)))
-na20 <- as.matrix(data.frame(col1=c(2,NA),col2=c(0,0)))
 
 ##############
 #### última fecha lmod_tap procesada!
 lmod_tap <- list.files(path = dir.mod.tap,pattern = ".tif$")
+
 ### el día siguiente a la última fecha mod-tap procesada
 mod_tap <- lmod_tap[length(lmod_tap)]
 lmod_tap <- jd2date(corte(lmod_tap[length(lmod_tap)]))
+## watch dog (if the next image to procces is less than 4 days to actual date)
 wd <-(as.Date(format(Sys.time(), "%Y-%m-%d"))-lmod_tap<=4)
 lmod_tap <- date2jd(lmod_tap+1)
 
@@ -126,7 +129,8 @@ base<- raster(paste0(dir.mod.tap,"/",mod_tap))
 
 
 mod.myd_base <- list.files(dir.mod.myd)
-mod.myd_base<- mod.myd_base[length(mod.myd_base)]
+### tomo la última información de mod.myd.base que se haya generado!!!
+mod.myd_base <- mod.myd_base[length(mod.myd_base)]
 
 x <- raster(paste0(dir.mod.myd,"/",mod.myd_base))
 y <- rcl(x,bNA)
@@ -136,7 +140,7 @@ if(as.numeric(corte(mod.myd_base))<=as.numeric(corte(mod_tap))){
   cat("No se ha generado información nueva para crear MOD TAP\n
       Pero hay más de 4 días de información faltante")
 
-  writeRaster(base,paste(dir.mod.tap,"/MOD_TAP.A",lmod_tap,"MISSING_BASE_snow.tif"
+  writeRaster(base,paste(dir.mod.tap,"/MOD_TAP.A",lmod_tap,"_MISSING_BASE_snow.tif"
                        ,sep=""),format="GTiff", overwrite=T,datatype="INT1U")
   
 }else{
@@ -148,6 +152,6 @@ cat(paste0("\n Imagen de base a ser utilizada: ", mod_tap))
   
 }
 
-cat("Proceso MOD-TAP Finalizazo\n")
+cat("Proceso MOD-TAP Finalizado\n")
 
 

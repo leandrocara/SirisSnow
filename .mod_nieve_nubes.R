@@ -29,7 +29,8 @@ if(length(list.files(dir.mbase))>=1){
 }else{ 
   p1 <- regexec("A[0-9]{6}",list.files(dir.mybase)[1])
   pp1 <- dir.mybase
-  }
+}
+### levanta la fecha de las imágenes
 p1 <- substr(list.files(pp1)[1],p1[[1]][1],p1[[1]][1]+7)
 #   ##############################################################
 # 0-40: Soil
@@ -52,9 +53,6 @@ FSC<- matrix(ncol = 2,data = c(-1,NA))
 SCA <-as.matrix(data.frame(d1=c(-1,seq(1,101)), d2=c(2,rep(0,39),rep(1,61),2)))
 CCA <-as.matrix(data.frame(d1=c(seq(-1,101)), d2=c(rep(0,102),1)))
 # capa de apoyo!
-bse <- (raster(apoyo)*0)-1
-
-
 cat("\n")
 cat(" Comenzando el proceso de reclasificación de las imágenes \n Y armado del producto combinado MOD.MYD \n")
 cat(" En este proceso se calculan además todos los productos de nubes \n")
@@ -79,6 +77,7 @@ cat(paste0("Comenzando a procesar ",mcdtipo[m],"\n"))
 cat(paste0("Número de imágenes ",mcdtipo[m], ": ",length(lmod),"\n"))
 
   if(length(lmod)>=1){
+  bse <- (raster(apoyo)*0)-1
   modfsc <- bse
 
   for(i in 1:length(lmod)){
