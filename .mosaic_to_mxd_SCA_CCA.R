@@ -122,12 +122,8 @@ if(length(lmod)>0 & length(lmyd)>0){
     }
 }
 
-# tpo2 <- mod.tap.series.full()
-
 
 base<- raster(paste0(dir.mod.tap,"/",mod_tap))
-
-
 mod.myd_base <- list.files(dir.mod.myd)
 ### tomo la última información de mod.myd.base que se haya generado!!!
 mod.myd_base <- mod.myd_base[length(mod.myd_base)]
