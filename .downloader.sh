@@ -33,6 +33,7 @@ log=`echo "$tabdir" | sed '6q;d'` ; log=${log#*,}; log=${log%,*}
 lf=`date -I` 
 cd $dirR
 rm -f *.*
+
 ########## traigo las funciones de shell! 
 source ./.shell_functions.sh
 
@@ -47,6 +48,11 @@ earthdata_token $usr $pass  > /dev/null
 
 #### corro la función que arma la estructura ##
 base_builder
+
+rm -rf $dataset${base[2]}
+rm -rf $dataset${base[5]}
+mkdir $dataset${base[2]}
+mkdir $dataset${base[5]}
 
 
 echo "Ejecutando el script armador_fechas"; echo "" ; echo "" 

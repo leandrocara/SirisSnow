@@ -141,7 +141,7 @@ if(as.numeric(corte(mod.myd_base))<=as.numeric(corte(mod_tap))){
   
 }else{
 cat(paste0("\n Imagen a procesar: ",mod.myd_base,"\n"))
-cat(paste0("\n Imagen de base a ser utilizada: ", names(base)))
+cat(paste0("\n Imagen de base a ser utilizada: ", mod_tap))
 
   writeRaster(base,paste(dir.mod.tap,"/MOD_TAP.A",lmod_tap,"_snow.tif"
                        ,sep=""),format="GTiff", overwrite=T,datatype="INT1U")
