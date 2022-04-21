@@ -112,16 +112,21 @@ if [ $x -gt 0 ]
 then 
 	mv MOD10A1_* $dataset${base[2]}
 	mv MYD10A1_* $dataset${base[5]}
-else 
-	echo "No se han obtenido imágenes para la fecha $fecha1\n se procede a armar la capa mod_tap de reemplazo"
+else
+	y="error.xml"
+	if [[ -f "$y" ]]; then echo "Problemas en el servidor del proovedor de imágenes detectado, abortando proceso"; exit 1; fi 
+
+	echo "No se han obtenido imágenes para la fecha $fecha1\n se procede a armar la capa mod_tap de reemplazo"	
 	Rscript .null_to_mod_tap.R $fecha1	
 	x="exit.wd"
+
 	if [[ -f "$x" ]]; then
 	echo "dada la cercanía de la fecha de análisis con la fecha actual, se procede a no armar imagen MOD_TAP" 
 		exit 1
 	else
 		continue
 	fi
+fi
 
 rm response-header.txt
 rm *.com
@@ -134,12 +139,10 @@ echo " corro el script mod nieve_nubes"
 Rscript .mod_nieve_nubes.R
 echo "Script mod_nieve_nubes.R finalizado"
 date +"%T"
-########################################################################################################################################
 
+########################################################################################################################################
 Rscript .mosaic_to_mxd_SCA_CCA.R $fecha1 
 echo "Script  mosaic_to_mxd_SCA_CCA."
-date +"%T"
-date +"%T"
 echo "FIN procesamiento día: $fecha1" 
 date +"%T"
 echo "#############################################################"

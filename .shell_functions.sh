@@ -7,15 +7,15 @@
 nsidc_downloader()
 {
 ### lo primero que tengo que hacer es tirar una búsqueda para ver cuantas imágenes tengo para descargar
+echo "Downloading MOD10A1 and MYD10A1" 
+echo "From $1 to $2"
 
 for i in `cat .tiles.txt`
 do
 
 var=`cat .var.txt`
-echo " Modo de presentación de fechas: $var"
 if [ $var -gt 0 ]
 then 
-	echo "From $1 to $2"
 curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MOD10A1&version=6&format=GeoTIFF&time=$1,$2&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"		
 
 curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MYD10A1&version=6&format=GeoTIFF&time=$1,$2&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"
