@@ -26,9 +26,6 @@ base=("/mod/" "/c_mod/" "/mod10base/" "/myd/" "/c_myd/" "/myd10base/" "/mod_tap/
 ################### dir modis base
 dataset=`echo "$tabdir" | sed '3q;d'`; dataset=${dataset#*,}; dataset=${dataset%,*}
 
-################### dir log	
-log=`echo "$tabdir" | sed '6q;d'` ; log=${log#*,}; log=${log%,*}
-#####################
 
 lf=`date -I` 
 cd $dirR
@@ -116,8 +113,15 @@ then
 	mv MOD10A1_* $dataset${base[2]}
 	mv MYD10A1_* $dataset${base[5]}
 else 
-	continue
-fi
+	echo "No se han obtenido imágenes para la fecha $fecha1\n se procede a armar la capa mod_tap de reemplazo"
+	Rscript .null_to_mod_tap.R $fecha1	
+	x="exit.wd"
+	if [[ -f "$x" ]]; then
+	echo "dada la cercanía de la fecha de análisis con la fecha actual, se procede a no armar imagen MOD_TAP" 
+		exit 1
+	else
+		continue
+	fi
 
 rm response-header.txt
 rm *.com
@@ -130,12 +134,9 @@ echo " corro el script mod nieve_nubes"
 Rscript .mod_nieve_nubes.R
 echo "Script mod_nieve_nubes.R finalizado"
 date +"%T"
-##################################################################
-
-
 ########################################################################################################################################
 
-Rscript .mosaic_to_mxd_SCA_CCA.R 
+Rscript .mosaic_to_mxd_SCA_CCA.R $fecha1 
 echo "Script  mosaic_to_mxd_SCA_CCA."
 date +"%T"
 date +"%T"

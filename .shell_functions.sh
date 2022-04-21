@@ -12,7 +12,7 @@ for i in `cat .tiles.txt`
 do
 
 var=`cat .var.txt`
-echo $var
+echo " Modo de presentación de fechas: $var"
 if [ $var -gt 0 ]
 then 
 	echo "From $1 to $2"
@@ -63,7 +63,6 @@ echo 1 > .var.txt
  bash .downloader.sh
  else 
  echo "Imágenes descargadas normalmente"
-
 fi 
 
 }

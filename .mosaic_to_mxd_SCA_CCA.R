@@ -3,8 +3,9 @@ rm(list = ls())
 suppressMessages(library(raster))
 suppressMessages(library(rgdal))
 suppressMessages(library(sp))
-
-
+args = commandArgs(trailingOnly=TRUE)
+# fecha <- "2000-03-15T00:00:00Z"
+fecha <- args[1]
 
 rutas <- read.table("./.dir.txt",sep = ",",stringsAsFactors = F)
 apoyo <- paste0(rutas[5,2],"mascara_comp.tif")
@@ -41,10 +42,6 @@ cat("\nProcesamiento de SCA y CCA Para MOD10A1 y MYD10A1:\n")
 ##
 lmod <- list.files(path=dir.mod,pattern = ".tif$")
 lmyd <- list.files(path=dir.myd,pattern = ".tif$")
-##############
-# acá vamos a poner una cláusula para achicar los lmxd..
-
-##############
 
 ##############
 #### última fecha lmod_tap procesada!
@@ -53,10 +50,7 @@ lmod_tap <- list.files(path = dir.mod.tap,pattern = ".tif$")
 ### el día siguiente a la última fecha mod-tap procesada
 mod_tap <- lmod_tap[length(lmod_tap)]
 lmod_tap <- jd2date(corte(lmod_tap[length(lmod_tap)]))
-## watch dog (if the next image to procces is less than 4 days to actual date)
-wd <-(as.Date(format(Sys.time(), "%Y-%m-%d"))-lmod_tap<=4)
 lmod_tap <- date2jd(lmod_tap+1)
-
 ##
 lmod <- lmod[which(grepl(lmod_tap,lmod))]
 lmyd <- lmyd[which(grepl(lmod_tap,lmyd))]
@@ -113,14 +107,15 @@ if(length(lmod)>0 & length(lmyd)>0){
     cat(paste0("MOD.MYD.A",lmod_tap,".MYD.snow.cover.area.tif\n\n"))
     writeRaster(myd,paste0(dir.mod.myd,"/MOD_MYD.A",lmod_tap,"_MYD_snow_cover_area.tif"),
                 format="GTiff", overwrite=T, datatype='INT1U')
-    
 }else{
-### si no existe ninguna de las imágenes no se genera nada!
-  if(wd){
-    cat("no hay imágenes nuevas para esta fecha!")
-    quit(save = "no",status = 1)
-    }
-}
+write(paste0("ESTE ES UN MENSAJE DE ERROR\n","time: ",timestamp(),
+"\nError generado para el día de análisis: ", fecha,"\nNo se debería haber generado este paso.",
+"\nImagen previa generada: ",mod_tap,
+"\nImagen que se esperaba generar: ",paste0("MOD_TAP.A",date2jd(substr(fecha,1,10)),"_snow.tif"),
+             "\npor favor, borrar toda información posterior a esta fecha y correr nuevamente el código
+            en modo a prueba de errores."),".log_error.txt")
+  quit(save = "no",status = 1)
+}  
 
 
 base<- raster(paste0(dir.mod.tap,"/",mod_tap))
@@ -137,7 +132,7 @@ if(as.numeric(corte(mod.myd_base))<=as.numeric(corte(mod_tap))){
       Pero hay más de 4 días de información faltante")
 cat(paste0("imagen de base utilizada:",mod_tap,"\n
           imagen a procesar:",mod.myd_base[length(mod.myd_base)],"\n
-          imagen a generar:","/MOD_TAP.A",lmod_tap,"_MISSING_mod_myd_snow"))
+          imagen a generar:","MOD_TAP.A",lmod_tap,"_MISSING_mod_myd_snow\n"))
 
   writeRaster(base,paste0(dir.mod.tap,"/MOD_TAP.A",lmod_tap,"_MISSING_mod_myd_snow.tif"),
               format="GTiff", overwrite=T,datatype="INT1U")
