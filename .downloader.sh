@@ -116,7 +116,7 @@ else
 	y="error.xml"
 	if [[ -f "$y" ]]; then echo "Problemas en el servidor del proovedor de imágenes detectado, abortando proceso"; exit 1; fi 
 
-	echo "No se han obtenido imágenes para la fecha $fecha1\n se procede a armar la capa mod_tap de reemplazo"	
+	echo "No se han obtenido imágenes para la fecha $fecha1";echo "se procede a armar la capa mod_tap de reemplazo"	
 	Rscript .null_to_mod_tap.R $fecha1	
 	x="exit.wd"
 
