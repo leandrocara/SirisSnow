@@ -1,9 +1,9 @@
 #!/bin/bash	
 	### Snow Corver Area and Clouds Cover Area Builder/Updater MODIS Derived data base. 
-clear
+clear 
 echo "//////////////////////////////////////////////////////////////////////////////////"
 echo "---------------------------------------------------------------------------------"
-echo "Snow Cover Area and Clouds Cover Area builder"
+echo "Snow Cover Area and Clouds Cover Area builder" 
 echo "Leandro Cara"
 echo "leandrocara@hotmail.com"
 echo "---------------------------------------------------------------------------------"
@@ -24,7 +24,7 @@ ini="./finic.txt"; fin="./ffin.txt"
 base=("/mod/" "/c_mod/" "/mod10base/" "/myd/" "/c_myd/" "/myd10base/" "/mod_tap/" "/mod_myd/" "/c_mod_myd_max/" "/c_mod_myd_min/" "/mod_fsc/" "/myd_fsc/")
 
 ################### dir modis base
-dataset=`echo "$tabdir" | sed '3q;d'`; dataset=${dataset#*,}; dataset=${dataset%,*}
+dataset=`echo "$tabdir" | sed '3q;d'`; dataset=${dataset#*,}; dataset=${dataset%,*} 
 
 
 lf=`date -I` 
@@ -36,21 +36,21 @@ source ./.shell_functions.sh
 
 ####
 #(2) earthdata_usr 
-echo "Executing earthdata_usr"
+echo "Executing earthdata_usr" 
 earthdata_usr -y -s
 
 echo "";echo "Obteniendo el token para la descarga del web-server de la nasa";echo ""
 
-earthdata_token $usr $pass  > /dev/null
+earthdata_token $usr $pass  > $dirR/log/log_errores.txt
 
 #### corro la función que arma la estructura ##
-base_builder
+base_builder >> $dirR/log/log_errores.txt
 
 echo "Ejecutando el script armador_fechas"; echo "" ; echo "" 
 ### ojo con esto, hay que cambiarlo para que no borre el README
-echo $token
+echo $token 
 
-Rscript ./.armador_fechas.R > /dev/null
+Rscript ./.armador_fechas.R >> $dirR/log/log_errores.txt
 ########################################################################################## 
 ########################################################################################## 
 #### empiezo el ciclo iterativo
@@ -87,7 +87,7 @@ date +"%T"
 ### revisar estas dos funciones, porque no debería tener diferencias a partir de ahora!
 check_connection --stand-alone
 nsidc_downloader $fecha1 $fecha2 $var
-nsidc_checker $fecha1
+nsidc_checker $fecha1 >> $dirR/log/log_errores.txt
 
 echo "################"
 
@@ -98,7 +98,7 @@ echo "################"
 
 
 echo "" ;echo "Imágenes descargadas para la fecha $fecha1" 	; echo ""  ; echo "#"  ; ls | grep '.tif'		; echo "#"  ; echo "" 
-date +"%T"
+date +"%T" >> $dirR/log/log_errores.txt
 		
 x=`ls *.tif | wc -l`
 
@@ -109,9 +109,9 @@ then
 	mv MYD10A1_* $dataset${base[5]}
 else
 	y="error.xml"
-	if [[ -f "$y" ]]; then echo "Problemas en el servidor del proovedor de imágenes detectado, abortando proceso"; exit 1; fi 
+	if [[ -f "$y" ]]; then echo "Problemas en el servidor del proovedor de imágenes detectado, abortando proceso " >> $dirR/log/log_errores.txt ; exit 1; fi 
 	echo "No se han obtenido imágenes para la fecha $fecha1"; echo "se procede a armar la capa mod_tap de reemplazo"	
-	Rscript .null_to_mod_tap.R $fecha1	
+	Rscript .null_to_mod_tap.R $fecha1 >> $dirR/log/log_errores.txt	
 	x="exit.wd"
 
 	if [[ -f "$x" ]]; then
@@ -125,26 +125,28 @@ fi
 rm response-header.txt
 rm *.com
 rm *.xml
-echo "" ;echo "Ejecutando el armador de información combinada para nieve y nubes"; echo "" 
+echo "" ;echo "Ejecutando el armador de información combinada para nieve y nubes" >> $dirR/log/log_errores.txt
+
+echo ""  
 
 ##################################################################
-echo " corro el script mod nieve_nubes"
+echo " corro el script mod nieve_nubes" >> $dirR/log/log_errores.txt
 
-Rscript .mod_nieve_nubes.R
+Rscript .mod_nieve_nubes.R >> $dirR/log/log_errores.txt
 echo "Script mod_nieve_nubes.R finalizado"
 date +"%T"
 
 ########################################################################################################################################
-Rscript .mosaic_to_mxd_SCA_CCA.R $fecha1 
+Rscript .mosaic_to_mxd_SCA_CCA.R $fecha1  >> $dirR/log/log_errores.txt
 echo "Script  mosaic_to_mxd_SCA_CCA."
-echo "FIN procesamiento día: $fecha1" 
+echo "FIN procesamiento día: $fecha1" >> $dirR/log/log_errores.txt 
 date +"%T"
 echo "#############################################################"
 
 rm -rf $dataset${base[2]}; rm -rf $dataset${base[5]}
 mkdir $dataset${base[2]}; mkdir $dataset${base[5]}
-
 done
+
 ################### elimina el token de descarga!
 curl -X DELETE --header "Content-Type: application/xml" https://cmr.earthdata.nasa.gov/legacy-services/rest/tokens/$token
 ###############
