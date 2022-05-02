@@ -110,9 +110,12 @@ local x=$dataset${base[6]}"MOD_TAP.A2000055_snow.tif"
 
 if [[ -f "$x" ]]; then
 echo "Existe información dentro de las carpetas!"
+
  ### información previamente generada!
  ### salgo 
+
 else
+
 echo "########################################"
 echo "NO se encuentra información previa en el sistema"
 echo "GENERO LA BASE DE LAS IMÁGENES!"

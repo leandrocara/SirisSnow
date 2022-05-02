@@ -51,6 +51,7 @@ echo "Ejecutando el script armador_fechas"; echo "" ; echo ""
 echo $token 
 
 Rscript ./.armador_fechas.R >> $dirR/log/log_errores.txt
+
 ########################################################################################## 
 ########################################################################################## 
 #### empiezo el ciclo iterativo
