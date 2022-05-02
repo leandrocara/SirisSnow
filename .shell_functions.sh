@@ -18,7 +18,7 @@ if [ $var -gt 0 ]
 then 
 echo "Ingresando con VAR == $var " 
 echo "Intervalo de descarga: $1 a $2"
-curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MOD10A1&version=6&format=GeoTIFF&time=$1,$2&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"		
+curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MOD10A1&version=6&format=GeoTIFF&time=$1,$2&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"		
 
 curl -O -J --dump-header response-header.txt "https://n5eil02u.ecs.nsidc.org/egi/request?short_name=MYD10A1&version=6&format=GeoTIFF&time=$1,$2&Subset_Data_layers=/MOD_Grid_Snow_500m/NDSI_Snow_Cover&projection=Geographic&bounding_box=$i&token=$token&email=name@domain.com"
 	
@@ -99,6 +99,9 @@ do
 		 mkdir $dataset$i
 	fi			
 done
+### borro el contenido de estas carpetas cada vez que se corre esta función!!!
+rm -rf $dataset${base[2]}; rm -rf $dataset${base[5]}
+mkdir $dataset${base[2]}; mkdir $dataset${base[5]}
 
 ### generé los directorios 
 

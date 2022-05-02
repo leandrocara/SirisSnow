@@ -46,12 +46,6 @@ earthdata_token $usr $pass  > /dev/null
 #### corro la función que arma la estructura ##
 base_builder
 
-rm -rf $dataset${base[2]}
-rm -rf $dataset${base[5]}
-mkdir $dataset${base[2]}
-mkdir $dataset${base[5]}
-
-
 echo "Ejecutando el script armador_fechas"; echo "" ; echo "" 
 ### ojo con esto, hay que cambiarlo para que no borre el README
 echo $token
@@ -109,14 +103,14 @@ date +"%T"
 x=`ls *.tif | wc -l`
 
 if [ $x -gt 0 ]
+### muevo las imágenes descargadas, a las carpetas modbase y mydbase
 then 
 	mv MOD10A1_* $dataset${base[2]}
 	mv MYD10A1_* $dataset${base[5]}
 else
 	y="error.xml"
 	if [[ -f "$y" ]]; then echo "Problemas en el servidor del proovedor de imágenes detectado, abortando proceso"; exit 1; fi 
-
-	echo "No se han obtenido imágenes para la fecha $fecha1";echo "se procede a armar la capa mod_tap de reemplazo"	
+	echo "No se han obtenido imágenes para la fecha $fecha1"; echo "se procede a armar la capa mod_tap de reemplazo"	
 	Rscript .null_to_mod_tap.R $fecha1	
 	x="exit.wd"
 
@@ -146,6 +140,10 @@ echo "Script  mosaic_to_mxd_SCA_CCA."
 echo "FIN procesamiento día: $fecha1" 
 date +"%T"
 echo "#############################################################"
+
+rm -rf $dataset${base[2]}; rm -rf $dataset${base[5]}
+mkdir $dataset${base[2]}; mkdir $dataset${base[5]}
+
 done
 ################### elimina el token de descarga!
 curl -X DELETE --header "Content-Type: application/xml" https://cmr.earthdata.nasa.gov/legacy-services/rest/tokens/$token
