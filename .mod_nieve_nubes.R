@@ -90,7 +90,7 @@ cat(paste0("Número de imágenes ",mcdtipo[m], ": ",length(lmod),"\n"))
 ### CCA
    writeRaster(rcl(modfsc,CCA),paste0(dir2[m],"/",mcdtipo[m],".",p1,"_Clouds_Cover_Area.tif"),
             format="GTiff", overwrite=T,datatype="INT1U")
-### SCA
+### SCA 
 writeRaster(rcl(modfsc,SCA),paste0(dir3[m],"/",mcdtipo[m],".",p1,"_Snow_Cover_Area.tif"),
             format="GTiff", overwrite=T,datatype="INT1U")
 ### FSC

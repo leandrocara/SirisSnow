@@ -138,16 +138,16 @@ echo "Script mod_nieve_nubes.R finalizado"
 date +"%T"
 
 ########################################################################################################################################
-Rscript .mosaic_to_mxd_SCA_CCA.R $fecha1  >> $dirR/log/log_errores.txt
 echo "Script  mosaic_to_mxd_SCA_CCA."
+# Rscript .mosaic_to_mxd_SCA_CCA.R $fecha1  >> $dirR/log/log_errores.txt
 echo "FIN procesamiento día: $fecha1" >> $dirR/log/log_errores.txt 
-date +"%T"
+date >> $dirR/log/log_errores.txt
 echo "#############################################################"
 
 rm -rf $dataset${base[2]}; rm -rf $dataset${base[5]}
 mkdir $dataset${base[2]}; mkdir $dataset${base[5]}
 done
-
+s
 ################### elimina el token de descarga!
 curl -X DELETE --header "Content-Type: application/xml" https://cmr.earthdata.nasa.gov/legacy-services/rest/tokens/$token
 ###############
