@@ -13,7 +13,8 @@ for (i in 1:length(funciones))
 
 
 #mod   ##############################################################
-dir.mod.tap  <-   paste0(direcciones[3,2],"/mod_tap/")
+# dir.mod.tap  <-   paste0(direcciones[3,2],"/mod_tap/")
+dir.mod.tap  <-   paste0(direcciones[3,2],"/mod/")
 #myd   ##############################################################
 
 fecha_modtap_last<- tail(corte.x(list.files(dir.mod.tap)),n=1)
